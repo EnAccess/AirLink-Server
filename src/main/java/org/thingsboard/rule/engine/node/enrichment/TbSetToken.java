@@ -15,47 +15,39 @@
  */
 package org.thingsboard.rule.engine.node.enrichment;
 
+import com.angaza.nexus.keycode.KeycodeFactory;
+import com.angaza.nexus.keycode.KeycodeMetadata;
+import com.angaza.nexus.keycode.KeycodeProtocol;
+import com.angaza.nexus.keycode.exceptions.*;
 import com.angaza.nexus.keycode.full.FullMessage;
+import com.angaza.nexus.keycode.util.HexToByteArray;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.thingsboard.rule.engine.api.RuleNode;
-import org.thingsboard.rule.engine.api.TbContext;
-import org.thingsboard.rule.engine.api.TbNode;
-import org.thingsboard.rule.engine.api.TbNodeConfiguration;
-import org.thingsboard.rule.engine.api.TbNodeException;
+import org.thingsboard.rule.engine.api.*;
 import org.thingsboard.rule.engine.api.util.TbNodeUtils;
-import org.thingsboard.server.common.data.DataConstants;
-import org.thingsboard.server.common.data.id.EntityId;
-import org.thingsboard.server.common.data.kv.*;
+import org.thingsboard.server.common.data.kv.AttributeKvEntry;
+import org.thingsboard.server.common.data.kv.BaseAttributeKvEntry;
+import org.thingsboard.server.common.data.kv.LongDataEntry;
 import org.thingsboard.server.common.data.plugin.ComponentType;
 import org.thingsboard.server.common.msg.TbMsg;
 
 import java.io.IOException;
 import java.util.*;
 
-import com.angaza.nexus.keycode.KeycodeFactory;
-import com.angaza.nexus.keycode.KeycodeMetadata;
-import com.angaza.nexus.keycode.KeycodeProtocol;
-import com.angaza.nexus.keycode.exceptions.*;
-import com.angaza.nexus.keycode.util.HexToByteArray;
-import org.thingsboard.server.dao.attributes.AttributesService;
-
-import static org.thingsboard.rule.engine.api.TbRelationTypes.FAILURE;
 import static org.thingsboard.rule.engine.api.TbRelationTypes.SUCCESS;
 
 /**
- * Created by mshvayka on 10.08.18.
+ * Created by Felix on 05.01.22.
  */
 @RuleNode(
         type = ComponentType.ENRICHMENT,
-        name = "Token For Vaibav",
+        name = "Access Token",
         configClazz = TbGetSumIntoMetadataConfiguration.class,
-        nodeDescription = "Genarate  ",
-        nodeDetails = "If fields in Message payload start with the <code>Input Key</code>, Sum of this fields added into metadata.",
+        nodeDescription = "Genarate  Tokens",
+        nodeDetails = "Okay fields in Message payload start with the <code>Input Key</code>, Sum of this fields added into metadata.",
         uiResources = {"static/rulenode/custom-nodes-config.js"},
         configDirective = "tbEnrichmentNodeSumIntoMetadataConfig")
-public class TbGetSumIntoMetadata implements TbNode {
+public class TbSetToken implements TbNode {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
