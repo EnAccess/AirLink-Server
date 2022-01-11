@@ -28,6 +28,7 @@ import org.thingsboard.rule.engine.api.util.TbNodeUtils;
 import org.thingsboard.server.common.data.kv.AttributeKvEntry;
 import org.thingsboard.server.common.data.kv.BaseAttributeKvEntry;
 import org.thingsboard.server.common.data.kv.LongDataEntry;
+import org.thingsboard.server.common.data.kv.StringDataEntry;
 import org.thingsboard.server.common.data.plugin.ComponentType;
 import org.thingsboard.server.common.msg.TbMsg;
 
@@ -99,11 +100,19 @@ public class TbSetToken implements TbNode {
                 }
             }
             if (hasRecords) {
-                AttributeKvEntry attrAOld = new BaseAttributeKvEntry(new LongDataEntry("msg_id",  ss_msg_id), msg.getTs());
-                List<AttributeKvEntry> att = new ArrayList<>();
-                att.add(0,attrAOld);
+                //                Save Server Attributes
+                AttributeKvEntry attrServer = new BaseAttributeKvEntry(new LongDataEntry("msg_id",  ss_msg_id), msg.getTs());
+                List<AttributeKvEntry> server_att = new ArrayList<>();
+                server_att.add(0,attrServer);
 
-                ctx.getAttributesService().save(ctx.getTenantId(),msg.getOriginator(),"SERVER_SCOPE", att );
+                ctx.getAttributesService().save(ctx.getTenantId(),msg.getOriginator(),"SERVER_SCOPE", server_att );
+
+//                Save Shared Attributes
+                AttributeKvEntry attrShared = new BaseAttributeKvEntry(new StringDataEntry("PC_tkn",  tkn), msg.getTs());
+                List<AttributeKvEntry> shared_att = new ArrayList<>();
+                shared_att.add(0,attrShared);
+
+                ctx.getAttributesService().save(ctx.getTenantId(),msg.getOriginator(),"SHARED_SCOPE", shared_att );
 
                 msg.getMetaData().putValue(outputKey, tkn);
                 msg.getMetaData().putValue("dev_id", String.valueOf(msg.getOriginator().getId()));
