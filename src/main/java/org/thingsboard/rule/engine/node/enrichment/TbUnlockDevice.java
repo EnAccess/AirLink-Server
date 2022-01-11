@@ -41,13 +41,13 @@ import static org.thingsboard.rule.engine.api.TbRelationTypes.SUCCESS;
  */
 @RuleNode(
         type = ComponentType.ENRICHMENT,
-        name = "Set Specific PAYG Credits",
+        name = "Unlock Device",
         configClazz = TbGetSumIntoMetadataConfiguration.class,
-        nodeDescription = "Generate Token To Set Specific Days On Device",
-        nodeDetails = "The Value of the input field will be set as the new value to the device <code>Input Key</code>.",
+        nodeDescription = "Generate Token To Unlock Device",
+        nodeDetails = "The input field must have a value greater than one to unlock the device <code>Input Key</code>, The output tokens generated will unlock the device.",
         uiResources = {"static/rulenode/custom-nodes-config.js"},
         configDirective = "tbEnrichmentNodeSumIntoMetadataConfig")
-public class TbSetToken implements TbNode {
+public class TbUnlockDevice implements TbNode {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -56,16 +56,15 @@ public class TbSetToken implements TbNode {
     private String outputKey;
 
 
-    public static String setCredit(String deviceSecretKey,int msg_id,int neededCredits) throws IOException, UnsupportedMessageIdException {
+    public static String unlockDevice(String deviceSecretKey,int msg_id) throws UnsupportedKeyMappingException, UnsupportedMessageDaysException, UnsupportedProtocolException, UnsupportedMessageIdException, IOException, UnsupportedMessageTypeException {
         byte[] secretKey = new HexToByteArray().convert(deviceSecretKey);
 
-        int credits = neededCredits /* days */ * 24 /* hours */;
-        FullMessage message = FullMessage.setCredit(msg_id, credits, secretKey);
-        String keycode = message.toKeycode();
+        KeycodeMetadata output = KeycodeFactory.unlock(msg_id, secretKey, KeycodeProtocol.FULL);
+        String keycode = output.getKeycodeData().getKeycode();
 
         return keycode;
-
     }
+
 
     @Override
     public void init(TbContext ctx, TbNodeConfiguration configuration) throws TbNodeException {
@@ -77,9 +76,13 @@ public class TbSetToken implements TbNode {
 
     @Override
     public void onMsg(TbContext ctx, TbMsg msg) {
-
         String deviceSecretKey = null;
+
+
+        double tokens ;
         String tkn = null;
+        String unlock = null;
+        String set_tkn = null;
 
         boolean hasRecords = false;
 
@@ -93,7 +96,7 @@ public class TbSetToken implements TbNode {
             while (iterator.hasNext()) {
                 String field = iterator.next();
                 if (field.startsWith(inputKey)) {
-                    tkn = setCredit(deviceSecretKey, (int) ss_msg_id, (int) jsonNode.get(field).asLong());
+                    tkn = unlockDevice(deviceSecretKey, (int) ss_msg_id);
                     ss_msg_id++;
                     hasRecords = true;
                 }
@@ -109,13 +112,23 @@ public class TbSetToken implements TbNode {
                 msg.getMetaData().putValue("dev_id", String.valueOf(msg.getOriginator().getId()));
                 msg.getMetaData().putValue("ss_msg_id", String.valueOf(ss_msg_id));
 
+
                 ctx.tellNext(msg, SUCCESS);
+
 
             } else {
                 ctx.tellFailure(msg, new Exception("Message doesn't contains the Input Key: " + inputKey));
             }
         } catch (IOException | UnsupportedMessageIdException e) {
             ctx.tellFailure(msg, e);
+        } catch (UnsupportedKeyMappingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedMessageDaysException e) {
+            e.printStackTrace();
+        } catch (UnsupportedProtocolException e) {
+            e.printStackTrace();
+        } catch (UnsupportedMessageTypeException e) {
+            e.printStackTrace();
         }
     }
 

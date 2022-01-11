@@ -45,14 +45,14 @@ import static org.thingsboard.rule.engine.api.TbRelationTypes.FAILURE;
 import static org.thingsboard.rule.engine.api.TbRelationTypes.SUCCESS;
 
 /**
- * Created by mshvayka on 10.08.18.
+ * Created by Simusolar on 10.08.18.
  */
 @RuleNode(
         type = ComponentType.ENRICHMENT,
-        name = "Token For Vaibav",
+        name = "Generate Additional PAYG Credits",
         configClazz = TbGetSumIntoMetadataConfiguration.class,
-        nodeDescription = "Genarate  ",
-        nodeDetails = "If fields in Message payload start with the <code>Input Key</code>, Sum of this fields added into metadata.",
+        nodeDescription = "Generate Token To add Days ",
+        nodeDetails = "The Value of the input field will be set as the addition Credits <code>Input Key</code>.",
         uiResources = {"static/rulenode/custom-nodes-config.js"},
         configDirective = "tbEnrichmentNodeSumIntoMetadataConfig")
 public class TbGetSumIntoMetadata implements TbNode {
@@ -63,26 +63,6 @@ public class TbGetSumIntoMetadata implements TbNode {
     private String inputKey;
     private String outputKey;
 
-
-    public static String setCredit(String deviceSecretKey,int msg_id,int neededCredits) throws IOException, UnsupportedMessageIdException {
-        byte[] secretKey = new HexToByteArray().convert(deviceSecretKey);
-
-        int credits = neededCredits /* days */ * 24 /* hours */;
-        FullMessage message = FullMessage.setCredit(msg_id, credits, secretKey);
-        String keycode = message.toKeycode();
-
-        return keycode;
-
-    }
-
-    public static String unlockDevice(String deviceSecretKey,int msg_id) throws UnsupportedKeyMappingException, UnsupportedMessageDaysException, UnsupportedProtocolException, UnsupportedMessageIdException, IOException, UnsupportedMessageTypeException {
-        byte[] secretKey = new HexToByteArray().convert(deviceSecretKey);
-
-        KeycodeMetadata output = KeycodeFactory.unlock(msg_id, secretKey, KeycodeProtocol.FULL);
-        String keycode = output.getKeycodeData().getKeycode();
-
-        return keycode;
-    }
 
 
     public static String generateFixedDaysToken(String deviceSecretKey,int msg_id,long neededTokens) throws UnsupportedKeyMappingException, UnsupportedMessageDaysException, UnsupportedProtocolException, UnsupportedMessageIdException, IOException, UnsupportedMessageTypeException {
@@ -114,11 +94,7 @@ public class TbGetSumIntoMetadata implements TbNode {
     public void onMsg(TbContext ctx, TbMsg msg) {
         String deviceSecretKey = null;
 
-
-        double tokens ;
         String tkn = null;
-        String unlock = null;
-        String set_tkn = null;
 
         boolean hasRecords = false;
 
@@ -127,6 +103,7 @@ public class TbGetSumIntoMetadata implements TbNode {
 
             long ss_msg_id = Long.parseLong(msg.getMetaData().getValue("ss_msg_id"));
             deviceSecretKey = msg.getMetaData().getValue("ss_device_secret");
+
 
             Iterator<String> iterator = jsonNode.fieldNames();
             while (iterator.hasNext()) {
@@ -147,23 +124,6 @@ public class TbGetSumIntoMetadata implements TbNode {
                 msg.getMetaData().putValue(outputKey, tkn);
                 msg.getMetaData().putValue("dev_id", String.valueOf(msg.getOriginator().getId()));
                 msg.getMetaData().putValue("ss_msg_id", String.valueOf(ss_msg_id));
-                msg.getMetaData().putValue("method", "POST");
-
-                // Demonstrating Set using HashSet
-                // Declaring object of type String
-                Set<String> hash_Set = new HashSet<String>();
-
-                // Adding elements to the Set
-                // using add() method
-                hash_Set.add("Geeks");
-                hash_Set.add("For");
-                hash_Set.add("Geeks");
-                hash_Set.add("Example");
-                hash_Set.add("Set");
-
-                String juma = "Juma";
-
-//                ctx.tellNext(msg, hash_Set);
 
                 ctx.tellNext(msg, SUCCESS);
 

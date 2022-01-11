@@ -31,7 +31,7 @@ public class TbGetSumIntoMetadataConfiguration implements NodeConfiguration<TbGe
     @Override
     public TbGetSumIntoMetadataConfiguration defaultConfiguration() {
         TbGetSumIntoMetadataConfiguration configuration = new TbGetSumIntoMetadataConfiguration();
-        configuration.setInputKey("pay_g_tkn");
+        configuration.setInputKey("credit");
         configuration.setOutputKey("created_token");
         return configuration;
     }
