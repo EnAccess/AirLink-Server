@@ -19,7 +19,7 @@ import lombok.Data;
 import org.thingsboard.rule.engine.api.NodeConfiguration;
 
 /**
- * Created by mshvayka on 10.08.18.
+ * Created by Felix on 10.01.22.
  */
 @Data
 public class TbGetSumIntoMetadataConfiguration implements NodeConfiguration<TbGetSumIntoMetadataConfiguration> {
