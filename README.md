@@ -12,3 +12,4 @@ https://thingsboard.io/docs/user-guide/contribution/rule-node-development/
 ````
 jar/code-generator-1.0.0-token-generation-nodes.jar
 ````
+
