@@ -7,3 +7,8 @@ This node is to be added to the rule chain for creations of tokens for devices.
 https://thingsboard.io/docs/user-guide/contribution/rule-node-development/
 ````
 
+# Jar file location
+
+````
+jar/code-generator-1.0.0-token-generation-nodes.jar
+````
