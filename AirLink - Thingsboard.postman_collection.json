@@ -1,0 +1,687 @@
+{
+	"info": {
+		"_postman_id": "859efea4-21ef-42f2-8ade-9aa2f09edb12",
+		"name": "AirLink - Thingsboard",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "From Client Device or Gateway",
+			"item": [
+				{
+					"name": "Attributes",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cr\": \"27\",\n    \"ft\": \"0\",\n    \"fv\": \"0\",\n    \"la\": 20,\n    \"ln\": 39.2419214,\n    \"lt\": -6.7649546,\n    \"pu\": \"H\",\n    \"rv\": \"0\",\n    \"did\": \"210800001\",\n    \"gts\": \"1631261161\",\n    \"pst\": \"0\",\n    \"ssn\": \"-67dBm\",\n    \"cbor\":\"AC62637263203136626674622030626676622030626C61623230626C6E6A33392E32343139323134626C746A2D362E373634393534366270756220486272766130636469646A20323130383030303031636774736B2031363331323631313631637073746220306373736E662D363764426D\"\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Thingsboard Server URL}}v1/{{Device Access Token}}/attributes",
+							"host": [
+								"{{Thingsboard Server URL}}v1"
+							],
+							"path": [
+								"{{Device Access Token}}",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Telemetry",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cr\": \"27\",\n    \"ft\": \"0\",\n    \"fv\": \"0\",\n    \"la\": 20,\n    \"ln\": 39.2419214,\n    \"lt\": -6.7649546,\n    \"pu\": \"H\",\n    \"rv\": \"2\",\n    \"did\": \"210800001\",\n    \"gts\": \"1631261161\",\n    \"pst\": \"0\",\n    \"ssn\": \"-67dBm\",\n    \"cbor\":\"AC62637263203136626674622030626676622030626C61623230626C6E6A33392E32343139323134626C746A2D362E373634393534366270756220486272766130636469646A20323130383030303031636774736B2031363331323631313631637073746220306373736E662D363764426D\"\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Thingsboard Server URL}}v1/{{Device Access Token}}/telemetry/",
+							"host": [
+								"{{Thingsboard Server URL}}v1"
+							],
+							"path": [
+								"{{Device Access Token}}",
+								"telemetry",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Gateway Telemetry",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cr\": \"27\",\n    \"ft\": \"0\",\n    \"fv\": \"0\",\n    \"la\": 20,\n    \"ln\": 39.2419214,\n    \"lt\": -6.7649546,\n    \"pu\": \"H\",\n    \"rv\": \"2\",\n    \"did\": \"210800001\",\n    \"gts\": \"1631261161\",\n    \"pst\": \"0\",\n    \"ssn\": \"-67dBm\",\n    \"cbor\":\"AC62637263203136626674622030626676622030626C61623230626C6E6A33392E32343139323134626C746A2D362E373634393534366270756220486272766130636469646A20323130383030303031636774736B2031363331323631313631637073746220306373736E662D363764426D\"\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Thingsboard Server URL}}v1/{{Gateway Access Token}}/telemetry/",
+							"host": [
+								"{{Thingsboard Server URL}}v1"
+							],
+							"path": [
+								"{{Gateway Access Token}}",
+								"telemetry",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET client and shared attributes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Thingsboard Server URL}}v1/{{Device Access Token}}/attributes",
+							"host": [
+								"{{Thingsboard Server URL}}v1"
+							],
+							"path": [
+								"{{Device Access Token}}",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "From BizApp Server",
+			"item": [
+				{
+					"name": "User/JWT Authenticated",
+					"item": [
+						{
+							"name": "User Login JWT Request",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"{{JWT Login}}\",\n    \"password\": \"{{JWT Password}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Thingsboard Server URL}}auth/login",
+									"host": [
+										"{{Thingsboard Server URL}}auth"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "JWT JWT Refresh",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Authorization",
+										"value": "Bearer {{JWT Token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"refreshToken\": \"{{JWT Refresh Token}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Thingsboard Server URL}}auth/token",
+									"host": [
+										"{{Thingsboard Server URL}}auth"
+									],
+									"path": [
+										"token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "JWT Shared Attributes Update",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Authorization",
+										"value": "Bearer {{JWT Token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"LOC_ln\": 3.465,\n\"LOC_lt\": 4.556,\n\"LOC_la\": 2.2,\n\"LOC_dss\": \"\",\n\"PRD_sat\": \"\",\n\"PRD_pst\": \"\",\n\"PRD_pu\": \"\",\n\"PRD_psc\": \"\",\n\"PRD_pul\": \"\",\n\"PRC_pst\": \"\",\n\"PRC_rid\": \"\",\n\"PRC_cp\": \"\",\n\"PRC_cn\": \"\",\n\"NXC_cmd\": \"\",\n\"PYG_lt\": \"\",\n\"PYG_lts\": \"\",\n\"PYG_ts\": \"\",\n\"PYG_lcr\": \"\",\n\"PYG_tkn\": \"\",\n\"PYG_mo\": \"\",\n\"PYG_re\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Thingsboard Server URL}}plugins/telemetry/DEVICE/{{Device ID for Direct Post}}attributes/SHARED_SCOPE",
+									"host": [
+										"{{Thingsboard Server URL}}plugins"
+									],
+									"path": [
+										"telemetry",
+										"DEVICE",
+										"{{Device ID for Direct Post}}attributes",
+										"SHARED_SCOPE"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "JWT Asset Update",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Authorization",
+										"value": "Bearer {{JWT Token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"LOC_ln\": 3.465,\n\"LOC_lt\": 4.556,\n\"LOC_la\": 2.2,\n\"LOC_dss\": \"\",\n\"PRD_sat\": \"\",\n\"PRD_pst\": \"\",\n\"PRD_pu\": \"\",\n\"PRD_psc\": \"\",\n\"PRD_pul\": \"\",\n\"PRC_pst\": \"\",\n\"PRC_rid\": \"\",\n\"PRC_cp\": \"\",\n\"PRC_cn\": \"\",\n\"NXC_cmd\": \"\",\n\"PYG_lt\": \"\",\n\"PYG_lts\": \"\",\n\"PYG_ts\": \"\",\n\"PYG_lcr\": \"\",\n\"PYG_tkn\": \"\",\n\"PYG_mo\": \"\",\n\"PYG_re\": \"\"\n}\n\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Thingsboard Server URL}}plugins/telemetry/ASSET/{{Gateway Device ID}}attributes/SHARED_SCOPE",
+									"host": [
+										"{{Thingsboard Server URL}}plugins"
+									],
+									"path": [
+										"telemetry",
+										"ASSET",
+										"{{Gateway Device ID}}attributes",
+										"SHARED_SCOPE"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "JWT Generate Token",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Authorization",
+										"value": "Bearer {{JWT Token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"method\": \"Add Credit\",\n    \"credit\": 5\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Thingsboard Server URL}}rule-engine/DEVICE/{{Device ID for Direct Post}}",
+									"host": [
+										"{{Thingsboard Server URL}}rule-engine"
+									],
+									"path": [
+										"DEVICE",
+										"{{Device ID for Direct Post}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "JWT Generate Token",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Authorization",
+												"value": "Bearer {{JWT Token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"method\": \"Add Credit\",\n    \"credit\": 5\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Thingsboard Server URL}}rule-engine/DEVICE/{{Device ID for Direct Post}}",
+											"host": [
+												"{{Thingsboard Server URL}}rule-engine"
+											],
+											"path": [
+												"DEVICE",
+												"{{Device ID for Direct Post}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "vary",
+											"value": "Origin"
+										},
+										{
+											"key": "vary",
+											"value": "Access-Control-Request-Method"
+										},
+										{
+											"key": "vary",
+											"value": "Access-Control-Request-Headers"
+										},
+										{
+											"key": "x-content-type-options",
+											"value": "nosniff"
+										},
+										{
+											"key": "x-xss-protection",
+											"value": "1; mode=block"
+										},
+										{
+											"key": "cache-control",
+											"value": "no-cache, no-store, max-age=0, must-revalidate"
+										},
+										{
+											"key": "pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "expires",
+											"value": "0"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json"
+										},
+										{
+											"key": "transfer-encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "date",
+											"value": "Tue, 08 Feb 2022 08:43:22 GMT"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"token\": \"*064 457 646 263 30#\"\n}"
+								}
+							]
+						},
+						{
+							"name": "JWT Find Devices",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Authorization",
+										"value": "Bearer {{JWT Token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \n    \"name\":\"80009\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Thingsboard Server URL}}devices",
+									"host": [
+										"{{Thingsboard Server URL}}devices"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "JWT Get Device Credentials",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Authorization",
+										"value": "Bearer {{JWT Token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \n    \"name\":\"80009\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Thingsboard Server URL}}device/9267f330-6efd-11ec-9d49-c737788b5399/credentials",
+									"host": [
+										"{{Thingsboard Server URL}}device"
+									],
+									"path": [
+										"9267f330-6efd-11ec-9d49-c737788b5399",
+										"credentials"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "JWT Create Device",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Authorization",
+										"value": "Bearer {{JWT Token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \n    \"name\":\"800104\",\n    \"deviceProfileId\":{\n        \"id\":\"6e989af0-3d47-11ec-9d49-c737788b5399\",\n        \"entityType\":\"DEVICE_PROFILE\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Thingsboard Server URL}}device?accessToken=fafda",
+									"host": [
+										"{{Thingsboard Server URL}}device"
+									],
+									"query": [
+										{
+											"key": "accessToken",
+											"value": "fafda"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "JWT Claim Device to Customer *notwkg",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Authorization",
+										"value": "Bearer {{JWT Token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"secretKey\":\"scret ky\"}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Thingsboard Server URL}}customer/device/{{Device Name}}claim/",
+									"host": [
+										"{{Thingsboard Server URL}}customer"
+									],
+									"path": [
+										"device",
+										"{{Device Name}}claim",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "POST Custom Integration",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cr\": \"18\",\n    \"ft\": \"0\",\n    \"fv\": \"0\",\n    \"la\": 20,\n    \"ln\": 39.2419214,\n    \"lt\": -6.7649546,\n    \"pu\": \"H\",\n    \"rv\": \"0\",\n    \"gts\": \"1631261161\",\n    \"pst\": \"0\",\n    \"ssn\": \"-67dBm\",\n    \"cbor\":\"AC62637263203136626674622030626676622030626C61623230626C6E6A33392E32343139323134626C746A2D362E373634393534366270756220486272766130636469646A20323130383030303031636774736B2031363331323631313631637073746220306373736E662D363764426D\"\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Thingsboard Server URL}}v1/integrations/http/{{Custom Integration UUID}}",
+							"host": [
+								"{{Thingsboard Server URL}}v1"
+							],
+							"path": [
+								"integrations",
+								"http",
+								"{{Custom Integration UUID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "From Staff Gateway",
+			"item": [
+				{
+					"name": "Provision to Gateway Profile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"deviceName\": \"TestGateway1\",\n  \"provisionDeviceKey\": \"{{Gateway Provision Key}}\",\n  \"provisionDeviceSecret\": \"{{Gateway Provision Secret}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Thingsboard Server URL}}v1/provision",
+							"host": [
+								"{{Thingsboard Server URL}}v1"
+							],
+							"path": [
+								"provision"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Provision to Device Profile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"deviceName\": \"TestDevice15\",\n  \"provisionDeviceKey\": \"{{Device Provision Key}}\",\n  \"provisionDeviceSecret\": \"{{Device Provision Secret}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Thingsboard Server URL}}v1/provision",
+							"host": [
+								"{{Thingsboard Server URL}}v1"
+							],
+							"path": [
+								"provision"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Provision to Device Profile",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"deviceName\": \"TestDevice15\",\n  \"provisionDeviceKey\": \"{{Device Provision Key}}\",\n  \"provisionDeviceSecret\": \"{{Device Provision Secret}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Thingsboard Server URL}}v1/provision",
+									"host": [
+										"{{Thingsboard Server URL}}v1"
+									],
+									"path": [
+										"provision"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "x-content-type-options",
+									"value": "nosniff"
+								},
+								{
+									"key": "x-xss-protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "cache-control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "expires",
+									"value": "0"
+								},
+								{
+									"key": "content-type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "content-length",
+									"value": "95"
+								},
+								{
+									"key": "date",
+									"value": "Mon, 13 Dec 2021 08:46:12 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\"credentialsValue\":\"tdjNqM63Ekg3WHOG2KAR\",\"credentialsType\":\"ACCESS_TOKEN\",\"status\":\"SUCCESS\"}"
+						}
+					]
+				}
+			]
+		}
+	]
+}
