@@ -1,0 +1,668 @@
+{
+  "ruleChain": {
+    "additionalInfo": {
+      "description": ""
+    },
+    "name": "Root: Advertisements and Telemetry",
+    "firstRuleNodeId": null,
+    "root": false,
+    "debugMode": false,
+    "configuration": null
+  },
+  "metadata": {
+    "firstNodeIndex": 6,
+    "nodes": [
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1952,
+          "layoutY": 717
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Condition response",
+        "debugMode": false,
+        "configuration": {
+          "jsScript": "msg = {\n    \"token\":metadata.created_token\n}\nreturn {msg: msg, metadata: metadata, msgType: msgType};"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1947,
+          "layoutY": 629
+        },
+        "type": "org.thingsboard.rule.engine.rest.TbSendRestApiCallReplyNode",
+        "name": "Ok",
+        "debugMode": false,
+        "configuration": {
+          "serviceIdMetaDataAttribute": "serviceId",
+          "requestIdMetaDataAttribute": "requestUUID"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": null,
+          "layoutX": 1005,
+          "layoutY": 406
+        },
+        "type": "org.thingsboard.rule.engine.rpc.TbSendRPCRequestNode",
+        "name": "RPC Call Request",
+        "debugMode": false,
+        "configuration": {
+          "timeoutInSeconds": 60
+        }
+      },
+      {
+        "additionalInfo": {
+          "layoutX": 281,
+          "layoutY": 302
+        },
+        "type": "org.thingsboard.rule.engine.filter.TbOriginatorTypeFilterNode",
+        "name": "Is Entity Group",
+        "debugMode": false,
+        "configuration": {
+          "originatorTypes": [
+            "ENTITY_GROUP"
+          ]
+        }
+      },
+      {
+        "additionalInfo": {
+          "layoutX": 273,
+          "layoutY": 105
+        },
+        "type": "org.thingsboard.rule.engine.filter.TbMsgTypeFilterNode",
+        "name": "Post attributes or RPC request",
+        "debugMode": false,
+        "configuration": {
+          "messageTypes": [
+            "POST_ATTRIBUTES_REQUEST",
+            "RPC_CALL_FROM_SERVER_TO_DEVICE"
+          ]
+        }
+      },
+      {
+        "additionalInfo": {
+          "layoutX": 567,
+          "layoutY": 106
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbDuplicateMsgToGroupNode",
+        "name": "Duplicate To Group Entities",
+        "debugMode": false,
+        "configuration": {
+          "entityGroupId": null,
+          "entityGroupIsMessageOriginator": true
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "Process incoming messages from devices with the alarm rules defined in the device profile. Dispatch all incoming messages with \"Success\" relation type.",
+          "layoutX": 57,
+          "layoutY": 406
+        },
+        "type": "org.thingsboard.rule.engine.profile.TbDeviceProfileNode",
+        "name": "Device Profile Node",
+        "debugMode": false,
+        "configuration": {
+          "persistAlarmRulesState": false,
+          "fetchAlarmRulesStateOnStart": false
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1928,
+          "layoutY": 383
+        },
+        "type": "org.thingsboard.rule.engine.action.TbCreateRelationNode",
+        "name": "Relate Gateway-Device",
+        "debugMode": false,
+        "configuration": {
+          "direction": "FROM",
+          "entityType": "DEVICE",
+          "entityNamePattern": "${deviceName}",
+          "entityTypePattern": "${deviceType}",
+          "relationType": "Contains",
+          "createEntityIfNotExists": false,
+          "removeCurrentRelations": false,
+          "changeOriginatorToRelatedEntity": true,
+          "entityCacheExpiration": 300
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1929,
+          "layoutY": 490
+        },
+        "type": "org.thingsboard.rule.engine.rest.TbRestApiCallNode",
+        "name": "Neighborhood Watch",
+        "debugMode": false,
+        "configuration": {
+          "restEndpointUrlPattern": "https://airlink.enaccess.org/api/v1/integrations/http/ae2ecd72-3341-15c9-aaf4-c94320bb8d38",
+          "requestMethod": "POST",
+          "useSimpleClientHttpFactory": false,
+          "enableProxy": false,
+          "useSystemProxyProperties": false,
+          "proxyScheme": null,
+          "proxyHost": null,
+          "proxyPort": 0,
+          "proxyUser": null,
+          "proxyPassword": null,
+          "readTimeoutMs": 0,
+          "maxParallelRequestsCount": 0,
+          "headers": {
+            "api-key": "eVQ6CznZ12584s9HXbf6zM1DK"
+          },
+          "useRedisQueueForMsgPersistence": false,
+          "trimQueue": false,
+          "maxQueueSize": 0,
+          "credentials": {
+            "type": "anonymous"
+          }
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1603,
+          "layoutY": 490
+        },
+        "type": "org.thingsboard.rule.engine.metadata.TbGetCustomerDetailsNode",
+        "name": "Customer Owned?",
+        "debugMode": false,
+        "configuration": {
+          "detailsList": [
+            "TITLE"
+          ],
+          "addToMetadata": false
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1605,
+          "layoutY": 383
+        },
+        "type": "org.thingsboard.rule.engine.metadata.TbGetTenantDetailsNode",
+        "name": "Tenant Owned?",
+        "debugMode": false,
+        "configuration": {
+          "detailsList": [
+            "TITLE"
+          ],
+          "addToMetadata": false
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "If Gateway Reports Device, post that data!",
+          "layoutX": 1602,
+          "layoutY": 198
+        },
+        "type": "org.thingsboard.rule.engine.filter.TbCheckMessageNode",
+        "name": "Device PiggyBack?",
+        "debugMode": false,
+        "configuration": {
+          "messageNames": [
+            "aDN"
+          ],
+          "metadataNames": [],
+          "checkAllKeys": true
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1603,
+          "layoutY": 288
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Snip Out Device",
+        "debugMode": false,
+        "configuration": {
+          "jsScript": "//Snip out only advertisement telemetry data to prevent rogue gateway posts of all attributes and telemetry of any device\nmetadata.deviceName = msg.aDN;\nmetadata.deviceType = \"default\";\nvar result = {\n    pst: msg.tms.pst, \n    cr: msg.tms.cr, \n    gmid: msg.tms.gmid, \n    gid: msg.tms.gid, \n    ln: msg.tms.ln, \n    lt: msg.tms.lt, \n    la: msg.tms.la, \n    dss: msg.tms.dss\n}\nmsg = result;\nreturn {msg: msg, metadata: metadata, msgType: msgType};"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1928,
+          "layoutY": 286
+        },
+        "type": "org.thingsboard.rule.engine.telemetry.TbMsgTimeseriesNode",
+        "name": "Save Snipped Device",
+        "debugMode": false,
+        "configuration": {
+          "defaultTTL": 0
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 573,
+          "layoutY": 512
+        },
+        "type": "org.thingsboard.rule.engine.action.TbClearAlarmNode",
+        "name": "Clear regular alarms",
+        "debugMode": false,
+        "configuration": {
+          "alarmType": "General Alarm",
+          "alarmDetailsBuildJs": "var details = {};\nif (metadata.prevAlarmDetails) {\n    details = JSON.parse(metadata.prevAlarmDetails);\n}\nreturn details;"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": null,
+          "layoutX": 1005,
+          "layoutY": 199
+        },
+        "type": "org.thingsboard.rule.engine.telemetry.TbMsgTimeseriesNode",
+        "name": "Save Timeseries",
+        "debugMode": false,
+        "configuration": {
+          "defaultTTL": 0
+        }
+      },
+      {
+        "additionalInfo": {
+          "layoutX": 1003,
+          "layoutY": 108
+        },
+        "type": "org.thingsboard.rule.engine.telemetry.TbMsgAttributesNode",
+        "name": "Save Attributes",
+        "debugMode": false,
+        "configuration": {
+          "scope": "CLIENT_SCOPE",
+          "notifyDevice": "false"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": null,
+          "layoutX": 566,
+          "layoutY": 302
+        },
+        "type": "org.thingsboard.rule.engine.filter.TbMsgTypeSwitchNode",
+        "name": "Message Type Switch",
+        "debugMode": false,
+        "configuration": {
+          "version": 0
+        }
+      },
+      {
+        "additionalInfo": {
+          "layoutX": 1004,
+          "layoutY": 298
+        },
+        "type": "org.thingsboard.rule.engine.action.TbLogNode",
+        "name": "Log RPC from Device",
+        "debugMode": false,
+        "configuration": {
+          "jsScript": "return '\\nIncoming message:\\n' + JSON.stringify(msg) + '\\nIncoming metadata:\\n' + JSON.stringify(metadata);"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1951,
+          "layoutY": 804
+        },
+        "type": "org.thingsboard.rule.engine.action.TbLogNode",
+        "name": "Log PAYG Requests",
+        "debugMode": false,
+        "configuration": {
+          "jsScript": "return 'Incoming message:\\n' + JSON.stringify(msg) + '\\nIncoming metadata:\\n' + JSON.stringify(metadata);"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1271,
+          "layoutY": 629
+        },
+        "type": "org.thingsboard.rule.engine.metadata.TbGetAttributesNode",
+        "name": "Get PAYG Message ID and Secret",
+        "debugMode": false,
+        "configuration": {
+          "tellFailureIfAbsent": true,
+          "clientAttributeNames": [],
+          "sharedAttributeNames": [],
+          "serverAttributeNames": [
+            "device_secret",
+            "msg_id"
+          ],
+          "latestTsKeyNames": [],
+          "getLatestValueWithTs": false
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1020,
+          "layoutY": 717
+        },
+        "type": "org.thingsboard.rule.engine.filter.TbJsSwitchNode",
+        "name": "PAYG Token Needed?",
+        "debugMode": false,
+        "configuration": {
+          "jsScript": "if (msg.method === \"Set Credit\" || msg.method === \"Add Credit\" || msg.method === \"Unlock PAYG\") return ['Generate Token']; \nelse return ['Failure'];\n"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1276,
+          "layoutY": 804
+        },
+        "type": "org.thingsboard.rule.engine.filter.TbJsSwitchNode",
+        "name": "Type of Token",
+        "debugMode": false,
+        "configuration": {
+          "jsScript": "return[msg.method];"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "This node takes in the required amount of credit to be added, looks into the metadata for the token generation secret specific to the device, then inserts the 'created_token' into the message in the 'Shared Attributes' section",
+          "layoutX": 1601,
+          "layoutY": 806
+        },
+        "type": "org.thingsboard.rule.engine.node.enrichment.TbGetSumIntoMetadata",
+        "name": "Add Token & Save",
+        "debugMode": false,
+        "configuration": {
+          "inputKey": "credit",
+          "outputKey": "created_token"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "This node takes in the required amount of credit to be set, looks into the metadata for the token generation secret specific to the device, then inserts the 'created_token' into the message in the 'Shared Attributes' section",
+          "layoutX": 1604,
+          "layoutY": 888
+        },
+        "type": "org.thingsboard.rule.engine.node.enrichment.TbUnlockDevice",
+        "name": "Unlock Token & Save",
+        "debugMode": false,
+        "configuration": {
+          "inputKey": "credit",
+          "outputKey": "created_token"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1273,
+          "layoutY": 715
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Condition for credit",
+        "debugMode": false,
+        "configuration": {
+          "jsScript": "\nreturn {msg: msg, metadata: metadata, msgType: msgType};"
+        }
+      },
+      {
+        "additionalInfo": {
+          "description": "This node takes in the required amount of credit to be set, looks into the metadata for the token generation secret specific to the device, then inserts the 'created_token' into the message in the 'Shared Attributes' section",
+          "layoutX": 1602,
+          "layoutY": 725
+        },
+        "type": "org.thingsboard.rule.engine.node.enrichment.TbSetToken",
+        "name": "Set Token & Save",
+        "debugMode": false,
+        "configuration": {
+          "inputKey": "credit",
+          "outputKey": "created_token"
+        }
+      },
+      {
+        "additionalInfo": {
+          "layoutX": 1011,
+          "layoutY": 510
+        },
+        "type": "org.thingsboard.rule.engine.action.TbLogNode",
+        "name": "Log Other",
+        "debugMode": false,
+        "configuration": {
+          "jsScript": "return '\\nIncoming message:\\n' + JSON.stringify(msg) + '\\nIncoming metadata:\\n' + JSON.stringify(metadata);"
+        }
+      }
+    ],
+    "connections": [
+      {
+        "fromIndex": 0,
+        "toIndex": 1,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 3,
+        "toIndex": 4,
+        "type": "True"
+      },
+      {
+        "fromIndex": 3,
+        "toIndex": 17,
+        "type": "False"
+      },
+      {
+        "fromIndex": 4,
+        "toIndex": 17,
+        "type": "False"
+      },
+      {
+        "fromIndex": 4,
+        "toIndex": 5,
+        "type": "True"
+      },
+      {
+        "fromIndex": 5,
+        "toIndex": 17,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 6,
+        "toIndex": 3,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 6,
+        "toIndex": 14,
+        "type": "Alarm Created"
+      },
+      {
+        "fromIndex": 7,
+        "toIndex": 13,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 9,
+        "toIndex": 8,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 9,
+        "toIndex": 7,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 10,
+        "toIndex": 9,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 10,
+        "toIndex": 7,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 11,
+        "toIndex": 12,
+        "type": "True"
+      },
+      {
+        "fromIndex": 12,
+        "toIndex": 10,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 15,
+        "toIndex": 11,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 17,
+        "toIndex": 27,
+        "type": "Other"
+      },
+      {
+        "fromIndex": 17,
+        "toIndex": 16,
+        "type": "Post attributes"
+      },
+      {
+        "fromIndex": 17,
+        "toIndex": 18,
+        "type": "RPC Request from Device"
+      },
+      {
+        "fromIndex": 17,
+        "toIndex": 15,
+        "type": "Post telemetry"
+      },
+      {
+        "fromIndex": 17,
+        "toIndex": 21,
+        "type": "REST API request"
+      },
+      {
+        "fromIndex": 17,
+        "toIndex": 2,
+        "type": "RPC Request to Device"
+      },
+      {
+        "fromIndex": 19,
+        "toIndex": 0,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 20,
+        "toIndex": 25,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 21,
+        "toIndex": 20,
+        "type": "Generate Token"
+      },
+      {
+        "fromIndex": 22,
+        "toIndex": 26,
+        "type": "Set Credit"
+      },
+      {
+        "fromIndex": 22,
+        "toIndex": 23,
+        "type": "Add Credit"
+      },
+      {
+        "fromIndex": 22,
+        "toIndex": 24,
+        "type": "Unlock PAYG"
+      },
+      {
+        "fromIndex": 23,
+        "toIndex": 19,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 23,
+        "toIndex": 19,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 24,
+        "toIndex": 19,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 24,
+        "toIndex": 19,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 25,
+        "toIndex": 22,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 26,
+        "toIndex": 19,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 26,
+        "toIndex": 19,
+        "type": "Failure"
+      }
+    ],
+    "ruleChainConnections": [
+      {
+        "fromIndex": 3,
+        "targetRuleChainId": {
+          "entityType": "RULE_CHAIN",
+          "id": "3723dc00-45ef-11ec-9d49-c737788b5399"
+        },
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 569,
+          "layoutY": 405,
+          "ruleChainNodeId": "rule-chain-node-30"
+        },
+        "type": "False"
+      },
+      {
+        "fromIndex": 4,
+        "targetRuleChainId": {
+          "entityType": "RULE_CHAIN",
+          "id": "3723dc00-45ef-11ec-9d49-c737788b5399"
+        },
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 557,
+          "layoutY": 11,
+          "ruleChainNodeId": "rule-chain-node-31"
+        },
+        "type": "False"
+      },
+      {
+        "fromIndex": 5,
+        "targetRuleChainId": {
+          "entityType": "RULE_CHAIN",
+          "id": "3723dc00-45ef-11ec-9d49-c737788b5399"
+        },
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 557,
+          "layoutY": 11,
+          "ruleChainNodeId": "rule-chain-node-31"
+        },
+        "type": "Success"
+      },
+      {
+        "fromIndex": 17,
+        "targetRuleChainId": {
+          "entityType": "RULE_CHAIN",
+          "id": "92467b30-f46c-11eb-9d49-c737788b5399"
+        },
+        "additionalInfo": {
+          "layoutX": 1017,
+          "layoutY": 625,
+          "ruleChainNodeId": "rule-chain-node-32"
+        },
+        "type": "Generate Report"
+      }
+    ]
+  }
+}
