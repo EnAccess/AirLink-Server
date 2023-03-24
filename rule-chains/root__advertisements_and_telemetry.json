@@ -11,8 +11,21 @@
     "configuration": null
   },
   "metadata": {
-    "firstNodeIndex": 6,
+    "firstNodeIndex": 7,
     "nodes": [
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1275,
+          "layoutY": 108
+        },
+        "type": "org.thingsboard.rule.engine.flow.TbRuleChainInputNode",
+        "name": "Data to PAYG Providers",
+        "debugMode": false,
+        "configuration": {
+          "ruleChainId": "d8ea2f50-ca3f-11ed-a290-33df78587eb5"
+        }
+      },
       {
         "additionalInfo": {
           "description": "",
@@ -433,23 +446,13 @@
     ],
     "connections": [
       {
-        "fromIndex": 0,
-        "toIndex": 1,
+        "fromIndex": 1,
+        "toIndex": 2,
         "type": "Success"
       },
       {
-        "fromIndex": 3,
-        "toIndex": 17,
-        "type": "False"
-      },
-      {
-        "fromIndex": 3,
-        "toIndex": 4,
-        "type": "True"
-      },
-      {
         "fromIndex": 4,
-        "toIndex": 17,
+        "toIndex": 18,
         "type": "False"
       },
       {
@@ -459,32 +462,32 @@
       },
       {
         "fromIndex": 5,
-        "toIndex": 17,
-        "type": "Success"
+        "toIndex": 18,
+        "type": "False"
+      },
+      {
+        "fromIndex": 5,
+        "toIndex": 6,
+        "type": "True"
       },
       {
         "fromIndex": 6,
-        "toIndex": 14,
-        "type": "Alarm Created"
-      },
-      {
-        "fromIndex": 6,
-        "toIndex": 3,
+        "toIndex": 18,
         "type": "Success"
       },
       {
         "fromIndex": 7,
-        "toIndex": 13,
+        "toIndex": 15,
+        "type": "Alarm Created"
+      },
+      {
+        "fromIndex": 7,
+        "toIndex": 4,
         "type": "Success"
       },
       {
-        "fromIndex": 9,
-        "toIndex": 8,
-        "type": "Failure"
-      },
-      {
-        "fromIndex": 9,
-        "toIndex": 7,
+        "fromIndex": 8,
+        "toIndex": 14,
         "type": "Success"
       },
       {
@@ -494,117 +497,137 @@
       },
       {
         "fromIndex": 10,
-        "toIndex": 7,
+        "toIndex": 8,
         "type": "Success"
       },
       {
         "fromIndex": 11,
-        "toIndex": 12,
-        "type": "True"
+        "toIndex": 10,
+        "type": "Failure"
       },
       {
-        "fromIndex": 12,
-        "toIndex": 10,
+        "fromIndex": 11,
+        "toIndex": 8,
         "type": "Success"
       },
       {
-        "fromIndex": 15,
+        "fromIndex": 12,
+        "toIndex": 13,
+        "type": "True"
+      },
+      {
+        "fromIndex": 13,
         "toIndex": 11,
         "type": "Success"
       },
       {
-        "fromIndex": 17,
-        "toIndex": 27,
-        "type": "Other"
-      },
-      {
-        "fromIndex": 17,
-        "toIndex": 16,
-        "type": "Post attributes"
-      },
-      {
-        "fromIndex": 17,
-        "toIndex": 15,
-        "type": "Post telemetry"
-      },
-      {
-        "fromIndex": 17,
-        "toIndex": 21,
-        "type": "REST API request"
-      },
-      {
-        "fromIndex": 17,
-        "toIndex": 18,
-        "type": "RPC Request from Device"
-      },
-      {
-        "fromIndex": 17,
-        "toIndex": 2,
-        "type": "RPC Request to Device"
-      },
-      {
-        "fromIndex": 19,
+        "fromIndex": 16,
         "toIndex": 0,
         "type": "Success"
       },
       {
+        "fromIndex": 16,
+        "toIndex": 12,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 17,
+        "toIndex": 0,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 18,
+        "toIndex": 28,
+        "type": "Other"
+      },
+      {
+        "fromIndex": 18,
+        "toIndex": 17,
+        "type": "Post attributes"
+      },
+      {
+        "fromIndex": 18,
+        "toIndex": 16,
+        "type": "Post telemetry"
+      },
+      {
+        "fromIndex": 18,
+        "toIndex": 22,
+        "type": "REST API request"
+      },
+      {
+        "fromIndex": 18,
+        "toIndex": 19,
+        "type": "RPC Request from Device"
+      },
+      {
+        "fromIndex": 18,
+        "toIndex": 3,
+        "type": "RPC Request to Device"
+      },
+      {
         "fromIndex": 20,
-        "toIndex": 25,
+        "toIndex": 1,
         "type": "Success"
       },
       {
         "fromIndex": 21,
-        "toIndex": 20,
-        "type": "Generate Token"
-      },
-      {
-        "fromIndex": 22,
-        "toIndex": 23,
-        "type": "Add Credit"
-      },
-      {
-        "fromIndex": 22,
         "toIndex": 26,
-        "type": "Set Credit"
-      },
-      {
-        "fromIndex": 22,
-        "toIndex": 24,
-        "type": "Unlock PAYG"
-      },
-      {
-        "fromIndex": 23,
-        "toIndex": 19,
-        "type": "Failure"
-      },
-      {
-        "fromIndex": 23,
-        "toIndex": 19,
         "type": "Success"
       },
       {
+        "fromIndex": 22,
+        "toIndex": 21,
+        "type": "Generate Token"
+      },
+      {
+        "fromIndex": 23,
+        "toIndex": 24,
+        "type": "Add Credit"
+      },
+      {
+        "fromIndex": 23,
+        "toIndex": 27,
+        "type": "Set Credit"
+      },
+      {
+        "fromIndex": 23,
+        "toIndex": 25,
+        "type": "Unlock PAYG"
+      },
+      {
         "fromIndex": 24,
-        "toIndex": 19,
+        "toIndex": 20,
         "type": "Failure"
       },
       {
         "fromIndex": 24,
-        "toIndex": 19,
+        "toIndex": 20,
         "type": "Success"
       },
       {
         "fromIndex": 25,
-        "toIndex": 22,
+        "toIndex": 20,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 25,
+        "toIndex": 20,
         "type": "Success"
       },
       {
         "fromIndex": 26,
-        "toIndex": 19,
+        "toIndex": 23,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 27,
+        "toIndex": 20,
         "type": "Failure"
       },
       {
-        "fromIndex": 26,
-        "toIndex": 19,
+        "fromIndex": 27,
+        "toIndex": 20,
         "type": "Success"
       }
     ],
