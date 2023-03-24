@@ -4,6 +4,7 @@
       "description": ""
     },
     "name": "Root: Advertisements and Telemetry",
+    "type": "CORE",
     "firstRuleNodeId": null,
     "root": false,
     "debugMode": false,
@@ -137,7 +138,7 @@
         },
         "type": "org.thingsboard.rule.engine.rest.TbRestApiCallNode",
         "name": "Neighborhood Watch",
-        "debugMode": false,
+        "debugMode": true,
         "configuration": {
           "restEndpointUrlPattern": "https://airlink.enaccess.org/api/v1/integrations/http/ae2ecd72-3341-15c9-aaf4-c94320bb8d38",
           "requestMethod": "POST",
@@ -205,7 +206,7 @@
         "debugMode": false,
         "configuration": {
           "messageNames": [
-            "aDN"
+            "advt_adn"
           ],
           "metadataNames": [],
           "checkAllKeys": true
@@ -219,9 +220,9 @@
         },
         "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
         "name": "Snip Out Device",
-        "debugMode": false,
+        "debugMode": true,
         "configuration": {
-          "jsScript": "//Snip out only advertisement telemetry data to prevent rogue gateway posts of all attributes and telemetry of any device\nmetadata.deviceName = msg.aDN;\nmetadata.deviceType = \"default\";\nvar result = {\n    pst: msg.tms.pst, \n    cr: msg.tms.cr, \n    gmid: msg.tms.gmid, \n    gid: msg.tms.gid, \n    ln: msg.tms.ln, \n    lt: msg.tms.lt, \n    la: msg.tms.la, \n    dss: msg.tms.dss\n}\nmsg = result;\nreturn {msg: msg, metadata: metadata, msgType: msgType};"
+          "jsScript": "//Snip out only advertisement telemetry data to prevent rogue gateway posts of all attributes and telemetry of any device\nmetadata.deviceName = msg.advt_adn;\nmetadata.deviceType = \"default\";\nvar result = {\n    advt_mac: msg.advt_tms.advt_mac,\n    advt_rv: msg.advt_tms.advt_rv,\n    advt_ft: msg.advt_tms.advt_ft,\n    advt_aid: msg.advt_tms.advt_aid,\n    advt_gts: msg.advt_tms.advt_gts,\n    advt_fv: msg.advt_tms.advt_fv,\n    advt_pu: msg.advt_tms.advt_pu,\n    advt_pst: msg.advt_tms.advt_pst, \n    advt_cr: msg.advt_tms.advt_cr, \n    loc_gmid: msg.advt_tms.advt_gmid, \n    loc_gid: msg.advt_tms.advt_gid, \n    loc_ln: msg.advt_tms.advt_ln, \n    loc_lt: msg.advt_tms.advt_lt, \n    loc_la: msg.advt_tms.advt_la, \n    loc_dss: msg.advt_tms.advt_dss,\n    advt_s1: msg.advt_tms.advt_s1\n}\nmsg = result;\nreturn {msg: msg, metadata: metadata, msgType: msgType};"
         }
       },
       {
@@ -438,13 +439,13 @@
       },
       {
         "fromIndex": 3,
-        "toIndex": 4,
-        "type": "True"
+        "toIndex": 17,
+        "type": "False"
       },
       {
         "fromIndex": 3,
-        "toIndex": 17,
-        "type": "False"
+        "toIndex": 4,
+        "type": "True"
       },
       {
         "fromIndex": 4,
@@ -463,13 +464,13 @@
       },
       {
         "fromIndex": 6,
-        "toIndex": 3,
-        "type": "Success"
+        "toIndex": 14,
+        "type": "Alarm Created"
       },
       {
         "fromIndex": 6,
-        "toIndex": 14,
-        "type": "Alarm Created"
+        "toIndex": 3,
+        "type": "Success"
       },
       {
         "fromIndex": 7,
@@ -523,11 +524,6 @@
       },
       {
         "fromIndex": 17,
-        "toIndex": 18,
-        "type": "RPC Request from Device"
-      },
-      {
-        "fromIndex": 17,
         "toIndex": 15,
         "type": "Post telemetry"
       },
@@ -535,6 +531,11 @@
         "fromIndex": 17,
         "toIndex": 21,
         "type": "REST API request"
+      },
+      {
+        "fromIndex": 17,
+        "toIndex": 18,
+        "type": "RPC Request from Device"
       },
       {
         "fromIndex": 17,
@@ -558,13 +559,13 @@
       },
       {
         "fromIndex": 22,
-        "toIndex": 26,
-        "type": "Set Credit"
+        "toIndex": 23,
+        "type": "Add Credit"
       },
       {
         "fromIndex": 22,
-        "toIndex": 23,
-        "type": "Add Credit"
+        "toIndex": 26,
+        "type": "Set Credit"
       },
       {
         "fromIndex": 22,
@@ -574,22 +575,22 @@
       {
         "fromIndex": 23,
         "toIndex": 19,
-        "type": "Success"
+        "type": "Failure"
       },
       {
         "fromIndex": 23,
         "toIndex": 19,
-        "type": "Failure"
-      },
-      {
-        "fromIndex": 24,
-        "toIndex": 19,
         "type": "Success"
       },
       {
         "fromIndex": 24,
         "toIndex": 19,
         "type": "Failure"
+      },
+      {
+        "fromIndex": 24,
+        "toIndex": 19,
+        "type": "Success"
       },
       {
         "fromIndex": 25,
@@ -599,70 +600,14 @@
       {
         "fromIndex": 26,
         "toIndex": 19,
-        "type": "Success"
+        "type": "Failure"
       },
       {
         "fromIndex": 26,
         "toIndex": 19,
-        "type": "Failure"
+        "type": "Success"
       }
     ],
-    "ruleChainConnections": [
-      {
-        "fromIndex": 3,
-        "targetRuleChainId": {
-          "entityType": "RULE_CHAIN",
-          "id": "3723dc00-45ef-11ec-9d49-c737788b5399"
-        },
-        "additionalInfo": {
-          "description": "",
-          "layoutX": 569,
-          "layoutY": 405,
-          "ruleChainNodeId": "rule-chain-node-30"
-        },
-        "type": "False"
-      },
-      {
-        "fromIndex": 4,
-        "targetRuleChainId": {
-          "entityType": "RULE_CHAIN",
-          "id": "3723dc00-45ef-11ec-9d49-c737788b5399"
-        },
-        "additionalInfo": {
-          "description": "",
-          "layoutX": 557,
-          "layoutY": 11,
-          "ruleChainNodeId": "rule-chain-node-31"
-        },
-        "type": "False"
-      },
-      {
-        "fromIndex": 5,
-        "targetRuleChainId": {
-          "entityType": "RULE_CHAIN",
-          "id": "3723dc00-45ef-11ec-9d49-c737788b5399"
-        },
-        "additionalInfo": {
-          "description": "",
-          "layoutX": 557,
-          "layoutY": 11,
-          "ruleChainNodeId": "rule-chain-node-31"
-        },
-        "type": "Success"
-      },
-      {
-        "fromIndex": 17,
-        "targetRuleChainId": {
-          "entityType": "RULE_CHAIN",
-          "id": "92467b30-f46c-11eb-9d49-c737788b5399"
-        },
-        "additionalInfo": {
-          "layoutX": 1017,
-          "layoutY": 625,
-          "ruleChainNodeId": "rule-chain-node-32"
-        },
-        "type": "Generate Report"
-      }
-    ]
+    "ruleChainConnections": null
   }
 }
