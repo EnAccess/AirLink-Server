@@ -1,0 +1,1108 @@
+{
+  "ruleChain": {
+    "additionalInfo": {
+      "description": ""
+    },
+    "name": "Angaza",
+    "type": "CORE",
+    "firstRuleNodeId": null,
+    "root": false,
+    "debugMode": false,
+    "configuration": null,
+    "externalId": null
+  },
+  "metadata": {
+    "firstNodeIndex": 31,
+    "nodes": [
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 487,
+          "layoutY": 670
+        },
+        "type": "org.thingsboard.rule.engine.filter.TbCheckMessageNode",
+        "name": "PAYG Remaining Credit reported?",
+        "debugMode": true,
+        "configuration": {
+          "messageNames": [
+            "pc_re"
+          ],
+          "metadataNames": [],
+          "checkAllKeys": true
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 484,
+          "layoutY": 457
+        },
+        "type": "org.thingsboard.rule.engine.metadata.TbGetAttributesNode",
+        "name": "Get PR",
+        "debugMode": true,
+        "configuration": {
+          "tellFailureIfAbsent": true,
+          "clientAttributeNames": [],
+          "sharedAttributeNames": [],
+          "serverAttributeNames": [
+            "angaza_pr"
+          ],
+          "latestTsKeyNames": [],
+          "getLatestValueWithTs": false
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 995,
+          "layoutY": 379
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Query for PR",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "metadata.doFnUrl = \"https://faas-ams3-2a2df116.doserverless.co/api/v1/namespaces/fn-542aff09-6b23-4c9e-b2fa-86da08d4777e/actions/getUnitRecordsResultFromAngaza?blocking=true&result=true\";\nmetadata.doFnAuth = \"Basic YzM4MzM5YjctZmFmNC00YTBiLWI5OGQtZWI3MTg0NDJiMWRmOjJyMzN0dmJUQkF6Q2xYWFo5TFZFdkxyS1NpNkxBbjFmMll6RFpSRnM5UWZNcWFKNVUwSkUzenNWcXJnQXVwTGY=\"\nmsg = {\n    url: \"https://payg.angazadesign.com/nexus/v1/unit_records_result/\" + metadata.ss_angaza_pr,\n    basicAuth: metadata.basicAuth\n}\nreturn {msg: msg, metadata: metadata, msgType: msgType};\n"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 485,
+          "layoutY": 292
+        },
+        "type": "org.thingsboard.rule.engine.metadata.TbGetAttributesNode",
+        "name": "Get Product code",
+        "debugMode": true,
+        "configuration": {
+          "tellFailureIfAbsent": true,
+          "clientAttributeNames": [],
+          "sharedAttributeNames": [],
+          "serverAttributeNames": [
+            "product_code"
+          ],
+          "latestTsKeyNames": [],
+          "getLatestValueWithTs": false
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 995,
+          "layoutY": 182
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Create Product",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "var msg = {\n  \"product_name\": metadata.ss_product_code,\n  \"product_type\": \"LARGEPADV1_KEYCODE\",\n  \"product_category\": \"Electronics\"\n};\nreturn {msg: msg, metadata: metadata, msgType: msgType};\n"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1263,
+          "layoutY": 183
+        },
+        "type": "org.thingsboard.rule.engine.rest.TbRestApiCallNode",
+        "name": "Create Product",
+        "debugMode": true,
+        "configuration": {
+          "restEndpointUrlPattern": "https://payg.angazadesign.com/nexus/v1/manufacturer_products",
+          "requestMethod": "POST",
+          "useSimpleClientHttpFactory": true,
+          "ignoreRequestBody": false,
+          "enableProxy": false,
+          "useSystemProxyProperties": false,
+          "proxyScheme": null,
+          "proxyHost": null,
+          "proxyPort": 0,
+          "proxyUser": null,
+          "proxyPassword": null,
+          "readTimeoutMs": 0,
+          "maxParallelRequestsCount": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Basic ${basicAuth}"
+          },
+          "useRedisQueueForMsgPersistence": false,
+          "trimQueue": false,
+          "maxQueueSize": 0,
+          "credentials": {
+            "type": "anonymous"
+          }
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1259,
+          "layoutY": 291
+        },
+        "type": "org.thingsboard.rule.engine.rest.TbRestApiCallNode",
+        "name": "Create Unit",
+        "debugMode": true,
+        "configuration": {
+          "restEndpointUrlPattern": "https://payg.angazadesign.com/nexus/v1/units",
+          "requestMethod": "POST",
+          "useSimpleClientHttpFactory": true,
+          "ignoreRequestBody": false,
+          "enableProxy": false,
+          "useSystemProxyProperties": false,
+          "proxyScheme": null,
+          "proxyHost": null,
+          "proxyPort": 0,
+          "proxyUser": null,
+          "proxyPassword": null,
+          "readTimeoutMs": 0,
+          "maxParallelRequestsCount": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Basic ${basicAuth}"
+          },
+          "useRedisQueueForMsgPersistence": false,
+          "trimQueue": false,
+          "maxQueueSize": 0,
+          "credentials": {
+            "type": "anonymous"
+          }
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 741,
+          "layoutY": 559
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Post Telemetry (NEEDS PREREGISTRATION OF DATA TYPES)",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "var msgin = msg;\nmsgin.timestamp = Number(metadata.ts/1000);\nmsg = {\n  \"unit_number\": metadata.shared_angaza_unitnumber,\n  \"samples\": metadata.telemetry.samples,\n  \"limit\": 100,\n  \"offset\": 0,\n  \"total_count\": 1\n};\nreturn {msg: msg, metadata: metadata, msgType: msgType};\n"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1806,
+          "layoutY": 291
+        },
+        "type": "org.thingsboard.rule.engine.telemetry.TbMsgAttributesNode",
+        "name": "Save Angaza unit ID",
+        "debugMode": true,
+        "configuration": {
+          "scope": "SHARED_SCOPE",
+          "notifyDevice": false
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1805,
+          "layoutY": 184
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Save to Unit",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "var msgin = msg;\nmetadata.device_secret = msgin.unit.split(\"\\r\\n\")[1].split(\",\")[2];\nvar unitnumber = msgin.unit.split(\"\\r\\n\")[1].split(\",\")[0];\nreturn {\n    msg: {\n        angaza_product_qid: metadata.angaza_product_qid, \n        angaza_unitnumber:  unitnumber,\n    }, \n    metadata: metadata, \n    msgType: \"POST_ATTRIBUTES_REQUEST\"\n};"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 55,
+          "layoutY": 360
+        },
+        "type": "org.thingsboard.rule.engine.filter.TbMsgTypeSwitchNode",
+        "name": "Which action occurred?",
+        "debugMode": true,
+        "configuration": {
+          "version": 0
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 478,
+          "layoutY": 185
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Clear body",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "msg = {};\nreturn {msg: msg, metadata: metadata, msgType: msgType};\n"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 997,
+          "layoutY": 293
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Create Entity",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "var msgin = msg;\nvar product_qid = \"\";\nif (msgin.hasOwnProperty(\"_embedded\")) {\nfor (var i=0;i<=msgin._embedded.item.length - 1; i++) {\n    if (msgin._embedded.item[i].name === metadata.ss_product_code) {product_qid = msgin._embedded.item[i].qid;break;}\n}\n}\nelse{\n    product_qid = msgin.qid;\n}\nvar msg = {\n  product_qid: product_qid,\n  count: 1,\n  starting_message_id: 0\n};\nreturn {msg: msg, metadata: metadata, msgType: msgType};\n"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 993,
+          "layoutY": 459
+        },
+        "type": "org.thingsboard.rule.engine.rest.TbRestApiCallNode",
+        "name": "Get Unit",
+        "debugMode": true,
+        "configuration": {
+          "restEndpointUrlPattern": "https://payg.angazadesign.com/nexus/v1/units/${angaza_unitnumber}",
+          "requestMethod": "GET",
+          "useSimpleClientHttpFactory": true,
+          "ignoreRequestBody": false,
+          "enableProxy": false,
+          "useSystemProxyProperties": false,
+          "proxyScheme": null,
+          "proxyHost": null,
+          "proxyPort": 0,
+          "proxyUser": null,
+          "proxyPassword": null,
+          "readTimeoutMs": 0,
+          "maxParallelRequestsCount": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "${doFnAuth}"
+          },
+          "useRedisQueueForMsgPersistence": false,
+          "trimQueue": false,
+          "maxQueueSize": 0,
+          "credentials": {
+            "type": "anonymous"
+          }
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 486,
+          "layoutY": 828
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Clear body",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "msg = {};\nreturn {msg: msg, metadata: metadata, msgType: msgType};\n"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 738,
+          "layoutY": 828
+        },
+        "type": "org.thingsboard.rule.engine.rest.TbRestApiCallNode",
+        "name": "List of Tokens",
+        "debugMode": true,
+        "configuration": {
+          "restEndpointUrlPattern": "https://payg.angazadesign.com/nexus/v1/keycodes?unit_number=${angaza_unitnumber}",
+          "requestMethod": "GET",
+          "useSimpleClientHttpFactory": true,
+          "ignoreRequestBody": false,
+          "enableProxy": false,
+          "useSystemProxyProperties": false,
+          "proxyScheme": null,
+          "proxyHost": null,
+          "proxyPort": 0,
+          "proxyUser": null,
+          "proxyPassword": null,
+          "readTimeoutMs": 0,
+          "maxParallelRequestsCount": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Basic ${basicAuth}"
+          },
+          "useRedisQueueForMsgPersistence": false,
+          "trimQueue": false,
+          "maxQueueSize": 0,
+          "credentials": {
+            "type": "anonymous"
+          }
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 997,
+          "layoutY": 559
+        },
+        "type": "org.thingsboard.rule.engine.rest.TbRestApiCallNode",
+        "name": "Telemetry",
+        "debugMode": true,
+        "configuration": {
+          "restEndpointUrlPattern": "https://payg.angazadesign.com/nexus/v1/usage_data",
+          "requestMethod": "POST",
+          "useSimpleClientHttpFactory": true,
+          "ignoreRequestBody": false,
+          "enableProxy": false,
+          "useSystemProxyProperties": false,
+          "proxyScheme": null,
+          "proxyHost": null,
+          "proxyPort": 0,
+          "proxyUser": null,
+          "proxyPassword": null,
+          "readTimeoutMs": 0,
+          "maxParallelRequestsCount": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Basic ${basicAuth}"
+          },
+          "useRedisQueueForMsgPersistence": false,
+          "trimQueue": false,
+          "maxQueueSize": 0,
+          "credentials": {
+            "type": "anonymous"
+          }
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1261,
+          "layoutY": 559
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Post Location",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "var msgin = msg;\nmsgin.timestamp = Number(metadata.ts/1000);\nmsg = {\n  \"unit_number\": metadata.angaza_unitnumber,\n  \"location\": {\n    \"record_time\": \"2019-01-30T07:08:09Z\",\n    \"latitude\": -1.3038142,\n    \"longitude\": 36.7862792,\n    \"accuracy_in_meters\": 106.2,\n    \"altitude\": 80.9\n  }\n};\nreturn {msg: msg, metadata: metadata, msgType: msgType};\n"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1540,
+          "layoutY": 560
+        },
+        "type": "org.thingsboard.rule.engine.rest.TbRestApiCallNode",
+        "name": "Location",
+        "debugMode": true,
+        "configuration": {
+          "restEndpointUrlPattern": "https://payg.angazadesign.com/nexus/v1/unit_location",
+          "requestMethod": "POST",
+          "useSimpleClientHttpFactory": true,
+          "ignoreRequestBody": false,
+          "enableProxy": false,
+          "useSystemProxyProperties": false,
+          "proxyScheme": null,
+          "proxyHost": null,
+          "proxyPort": 0,
+          "proxyUser": null,
+          "proxyPassword": null,
+          "readTimeoutMs": 0,
+          "maxParallelRequestsCount": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Basic ${basicAuth}"
+          },
+          "useRedisQueueForMsgPersistence": false,
+          "trimQueue": false,
+          "maxQueueSize": 0,
+          "credentials": {
+            "type": "anonymous"
+          }
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 738,
+          "layoutY": 294
+        },
+        "type": "org.thingsboard.rule.engine.rest.TbRestApiCallNode",
+        "name": "Get Product List",
+        "debugMode": true,
+        "configuration": {
+          "restEndpointUrlPattern": "https://payg.angazadesign.com/nexus/v1/manufacturer_products",
+          "requestMethod": "GET",
+          "useSimpleClientHttpFactory": true,
+          "ignoreRequestBody": false,
+          "enableProxy": false,
+          "useSystemProxyProperties": false,
+          "proxyScheme": null,
+          "proxyHost": null,
+          "proxyPort": 0,
+          "proxyUser": null,
+          "proxyPassword": null,
+          "readTimeoutMs": 0,
+          "maxParallelRequestsCount": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Basic ${basicAuth}"
+          },
+          "useRedisQueueForMsgPersistence": false,
+          "trimQueue": false,
+          "maxQueueSize": 0,
+          "credentials": {
+            "type": "anonymous"
+          }
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 999,
+          "layoutY": 828
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Compose Attributes",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "if (msg.hasOwnProperty(\"_embedded\")){\n    msg = {\n        pc_tkn: msg._embedded.item[0].keycode\n    }\n} else {\n    msg = {}\n}\nreturn {msg: msg, metadata: metadata, msgType: \"POST_ATTRIBUTES_REQUEST\"};"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1261,
+          "layoutY": 829
+        },
+        "type": "org.thingsboard.rule.engine.telemetry.TbMsgAttributesNode",
+        "name": "Save Token",
+        "debugMode": true,
+        "configuration": {
+          "scope": "SHARED_SCOPE",
+          "notifyDevice": false
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1809,
+          "layoutY": 455
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Save to Unit",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "var msgin=metadata.device_secret;\nreturn {\n    msg: {\n        device_secret: msgin \n    }, \n    metadata: metadata, \n    msgType: \"POST_ATTRIBUTES_REQUEST\"\n};"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1812,
+          "layoutY": 556
+        },
+        "type": "org.thingsboard.rule.engine.telemetry.TbMsgAttributesNode",
+        "name": "Save Nexus Token Secret or PR",
+        "debugMode": true,
+        "configuration": {
+          "scope": "SERVER_SCOPE",
+          "notifyDevice": false
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 737,
+          "layoutY": 670
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "PAYG Credit update body",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "var daysFromNow = msg.pc_re; //Days presumed as default\nif (msg.hasOwnProperty(\"pc_pu\")){\n    switch (msg.pc_pu) {\n        case 's':\n            daysFromNow = msg.pc_re / 3600 / 24;\n            break;\n        case 'm':\n            daysFromNow = msg.pc_re / 60 / 24;\n            break;\n        case 'h':\n            daysFromNow = msg.pc_re / 24;\n            break;\n        default:\n            daysFromNow = msg.pc_re;\n    };\n}\nmsg = {\n    unit_number: metadata.angaza_unitnumber,\n    state: {\n        reported: {\n            credit_until_dt: new Date(Date.now() + (3600 * 1000 * 24 * daysFromNow)) \n        }\n    }\n};\nreturn {msg: msg, metadata: metadata, msgType: msgType};\n"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 998,
+          "layoutY": 669
+        },
+        "type": "org.thingsboard.rule.engine.rest.TbRestApiCallNode",
+        "name": "Update Reported Credit",
+        "debugMode": true,
+        "configuration": {
+          "restEndpointUrlPattern": "https://payg.angazadesign.com/nexus/v1/unit_credit",
+          "requestMethod": "PUT",
+          "useSimpleClientHttpFactory": true,
+          "ignoreRequestBody": false,
+          "enableProxy": false,
+          "useSystemProxyProperties": false,
+          "proxyScheme": null,
+          "proxyHost": null,
+          "proxyPort": 0,
+          "proxyUser": null,
+          "proxyPassword": null,
+          "readTimeoutMs": 0,
+          "maxParallelRequestsCount": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Basic ${basicAuth}"
+          },
+          "useRedisQueueForMsgPersistence": false,
+          "trimQueue": false,
+          "maxQueueSize": 0,
+          "credentials": {
+            "type": "anonymous"
+          }
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1536,
+          "layoutY": 455
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Save PR to Unit",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "var msgin=msg;\nreturn {\n    msg: {\n        angaza_pr: msgin.qid \n    }, \n    metadata: metadata, \n    msgType: \"POST_ATTRIBUTES_REQUEST\"\n};"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1259,
+          "layoutY": 457
+        },
+        "type": "org.thingsboard.rule.engine.rest.TbRestApiCallNode",
+        "name": "Send PATCH request",
+        "debugMode": true,
+        "configuration": {
+          "restEndpointUrlPattern": "https://payg.angazadesign.com/nexus/v1/units/${angaza_unitqid}",
+          "requestMethod": "POST",
+          "useSimpleClientHttpFactory": true,
+          "ignoreRequestBody": false,
+          "enableProxy": false,
+          "useSystemProxyProperties": false,
+          "proxyScheme": null,
+          "proxyHost": null,
+          "proxyPort": 0,
+          "proxyUser": null,
+          "proxyPassword": null,
+          "readTimeoutMs": 0,
+          "maxParallelRequestsCount": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Basic ${basicAuth}",
+            "X-HTTP-Method-Override": "PATCH"
+          },
+          "useRedisQueueForMsgPersistence": false,
+          "trimQueue": false,
+          "maxQueueSize": 0,
+          "credentials": {
+            "type": "anonymous"
+          }
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 736,
+          "layoutY": 458
+        },
+        "type": "org.thingsboard.rule.engine.filter.TbCheckMessageNode",
+        "name": "Check if payg secret updated",
+        "debugMode": true,
+        "configuration": {
+          "messageNames": [
+            "device_secret",
+            "msg_id"
+          ],
+          "metadataNames": [],
+          "checkAllKeys": true
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1530,
+          "layoutY": 184
+        },
+        "type": "org.thingsboard.rule.engine.rest.TbRestApiCallNode",
+        "name": "Get PR Result",
+        "debugMode": true,
+        "configuration": {
+          "restEndpointUrlPattern": "${doFnUrl}",
+          "requestMethod": "POST",
+          "useSimpleClientHttpFactory": true,
+          "ignoreRequestBody": false,
+          "enableProxy": false,
+          "useSystemProxyProperties": false,
+          "proxyScheme": null,
+          "proxyHost": null,
+          "proxyPort": 0,
+          "proxyUser": null,
+          "proxyPassword": null,
+          "readTimeoutMs": 0,
+          "maxParallelRequestsCount": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "${doFnAuth}"
+          },
+          "useRedisQueueForMsgPersistence": false,
+          "trimQueue": false,
+          "maxQueueSize": 0,
+          "credentials": {
+            "type": "anonymous"
+          }
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1532,
+          "layoutY": 381
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Save product qid to Unit",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "var msgin = msg;\nreturn {\n    msg: {\n        angaza_product_qid: metadata.angaza_product_qid\n    }, \n    metadata: metadata, \n    msgType: \"POST_ATTRIBUTES_REQUEST\"\n};"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 50,
+          "layoutY": 248
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Add Angaza Auth Info",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "var username = \"airlink_nexus_demo\";\nvar password = \"!2?6r*Cugq9Y\";\nvar unencodedString = username + \":\" + password;\nvar encodedString = btoa(unencodedString);\nmetadata.basicAuth = encodedString; \nreturn {msg: msg, metadata: metadata, msgType: msgType};\n"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 739,
+          "layoutY": 181
+        },
+        "type": "org.thingsboard.rule.engine.filter.TbJsFilterNode",
+        "name": "Product Present",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "return JSON.stringify(msg).indexOf(metadata.ss_product_code) != -1;"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 738,
+          "layoutY": 752
+        },
+        "type": "org.thingsboard.rule.engine.rest.TbRestApiCallNode",
+        "name": "Get Switchoff Date",
+        "debugMode": true,
+        "configuration": {
+          "restEndpointUrlPattern": "https://payg.angazadesign.com/nexus/v1/unit_credit",
+          "requestMethod": "GET",
+          "useSimpleClientHttpFactory": true,
+          "ignoreRequestBody": false,
+          "enableProxy": false,
+          "useSystemProxyProperties": false,
+          "proxyScheme": null,
+          "proxyHost": null,
+          "proxyPort": 0,
+          "proxyUser": null,
+          "proxyPassword": null,
+          "readTimeoutMs": 0,
+          "maxParallelRequestsCount": 0,
+          "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Basic ${basicAuth}"
+          },
+          "useRedisQueueForMsgPersistence": false,
+          "trimQueue": false,
+          "maxQueueSize": 0,
+          "credentials": {
+            "type": "anonymous"
+          }
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 999,
+          "layoutY": 749
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Compose Attributes",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "if (msg.hasOwnProperty(\"state\")){\n    msg = {pc_sot: msg.state.desired.credit_until_dt}\n} else\n{\n    msg = {}\n}\nreturn {msg: msg, metadata: metadata, msgType: \"POST_ATTRIBUTES_REQUEST\"};"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1261,
+          "layoutY": 750
+        },
+        "type": "org.thingsboard.rule.engine.telemetry.TbMsgAttributesNode",
+        "name": "Save Switch-Off",
+        "debugMode": true,
+        "configuration": {
+          "scope": "SHARED_SCOPE",
+          "notifyDevice": false
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 484,
+          "layoutY": 562
+        },
+        "type": "org.thingsboard.rule.engine.metadata.TbGetAttributesNode",
+        "name": "Get Unit Number & Product Code",
+        "debugMode": true,
+        "configuration": {
+          "tellFailureIfAbsent": true,
+          "clientAttributeNames": [],
+          "sharedAttributeNames": [
+            "angaza_unitnumber",
+            "angaza_product_qid"
+          ],
+          "serverAttributeNames": [
+            "product_code"
+          ],
+          "latestTsKeyNames": [],
+          "getLatestValueWithTs": false
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1530,
+          "layoutY": 291
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Delay 1 sec",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "for(var i=0;i<=5000000;i++){};\nmetadata.ss_angaza_pr = msg.qid;\nmetadata.doFnUrl = \"https://faas-ams3-2a2df116.doserverless.co/api/v1/namespaces/fn-542aff09-6b23-4c9e-b2fa-86da08d4777e/actions/getUnitRecordsResultFromAngaza?blocking=true&result=true\";\nmetadata.doFnAuth = \"Basic YzM4MzM5YjctZmFmNC00YTBiLWI5OGQtZWI3MTg0NDJiMWRmOjJyMzN0dmJUQkF6Q2xYWFo5TFZFdkxyS1NpNkxBbjFmMll6RFpSRnM5UWZNcWFKNVUwSkUzenNWcXJnQXVwTGY=\"\nmsg = {\n    url: \"https://payg.angazadesign.com/nexus/v1/unit_records_result/\" + metadata.ss_angaza_pr,\n    basicAuth: metadata.basicAuth\n}\nreturn {msg: msg, metadata: metadata, msgType: msgType};"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1257,
+          "layoutY": 377
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Save Patch Secret Body",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "metadata.angaza_unitqid = msg.qid;\nvar msg = {\n  secret_key: msg.device_secret,\n  last_message_id: msg.msg_id\n};\nreturn {msg: msg, metadata: metadata, msgType: msgType};\n"
+        },
+        "externalId": null
+      }
+    ],
+    "connections": [
+      {
+        "fromIndex": 0,
+        "toIndex": 24,
+        "type": "True"
+      },
+      {
+        "fromIndex": 1,
+        "toIndex": 2,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 1,
+        "toIndex": 3,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 2,
+        "toIndex": 29,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 3,
+        "toIndex": 11,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 4,
+        "toIndex": 5,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 5,
+        "toIndex": 12,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 6,
+        "toIndex": 26,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 6,
+        "toIndex": 30,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 6,
+        "toIndex": 37,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 8,
+        "toIndex": 22,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 8,
+        "toIndex": 22,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 9,
+        "toIndex": 8,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 10,
+        "toIndex": 14,
+        "type": "Activity Event"
+      },
+      {
+        "fromIndex": 10,
+        "toIndex": 14,
+        "type": "Inactivity Event"
+      },
+      {
+        "fromIndex": 10,
+        "toIndex": 14,
+        "type": "Post attributes"
+      },
+      {
+        "fromIndex": 10,
+        "toIndex": 14,
+        "type": "Post telemetry"
+      },
+      {
+        "fromIndex": 10,
+        "toIndex": 14,
+        "type": "REST API request"
+      },
+      {
+        "fromIndex": 10,
+        "toIndex": 14,
+        "type": "RPC Request from Device"
+      },
+      {
+        "fromIndex": 10,
+        "toIndex": 14,
+        "type": "RPC Request to Device"
+      },
+      {
+        "fromIndex": 10,
+        "toIndex": 36,
+        "type": "Attributes Updated"
+      },
+      {
+        "fromIndex": 10,
+        "toIndex": 36,
+        "type": "Entity Created"
+      },
+      {
+        "fromIndex": 10,
+        "toIndex": 36,
+        "type": "Post attributes"
+      },
+      {
+        "fromIndex": 10,
+        "toIndex": 36,
+        "type": "Post telemetry"
+      },
+      {
+        "fromIndex": 11,
+        "toIndex": 19,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 12,
+        "toIndex": 6,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 13,
+        "toIndex": 38,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 14,
+        "toIndex": 15,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 14,
+        "toIndex": 33,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 15,
+        "toIndex": 20,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 16,
+        "toIndex": 17,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 17,
+        "toIndex": 18,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 19,
+        "toIndex": 32,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 20,
+        "toIndex": 21,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 22,
+        "toIndex": 23,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 24,
+        "toIndex": 25,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 26,
+        "toIndex": 23,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 28,
+        "toIndex": 7,
+        "type": "False"
+      },
+      {
+        "fromIndex": 28,
+        "toIndex": 7,
+        "type": "True"
+      },
+      {
+        "fromIndex": 28,
+        "toIndex": 13,
+        "type": "True"
+      },
+      {
+        "fromIndex": 29,
+        "toIndex": 9,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 30,
+        "toIndex": 8,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 31,
+        "toIndex": 10,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 32,
+        "toIndex": 4,
+        "type": "False"
+      },
+      {
+        "fromIndex": 32,
+        "toIndex": 12,
+        "type": "True"
+      },
+      {
+        "fromIndex": 33,
+        "toIndex": 34,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 34,
+        "toIndex": 35,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 36,
+        "toIndex": 0,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 36,
+        "toIndex": 1,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 36,
+        "toIndex": 28,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 37,
+        "toIndex": 29,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 38,
+        "toIndex": 27,
+        "type": "Success"
+      }
+    ],
+    "ruleChainConnections": null
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "ruleChain": {
+    "additionalInfo": {
+      "description": ""
+    },
+    "name": "Interact with PAYG Software Providers",
+    "type": "CORE",
+    "firstRuleNodeId": null,
+    "root": false,
+    "debugMode": true,
+    "configuration": null,
+    "externalId": null
+  },
+  "metadata": {
+    "firstNodeIndex": 1,
+    "nodes": [
+      {
+        "additionalInfo": {
+          "layoutX": 370,
+          "layoutY": 406
+        },
+        "type": "org.thingsboard.rule.engine.flow.TbRuleChainInputNode",
+        "name": "Solaris",
+        "debugMode": false,
+        "configuration": {
+          "ruleChainId": "ebd06210-4285-11ee-9740-31a4f1fcfc8c"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 52,
+          "layoutY": 248
+        },
+        "type": "org.thingsboard.rule.engine.metadata.TbGetAttributesNode",
+        "name": "Get PAYG Message ID and Secret",
+        "debugMode": true,
+        "configuration": {
+          "tellFailureIfAbsent": false,
+          "clientAttributeNames": [],
+          "sharedAttributeNames": [],
+          "serverAttributeNames": [
+            "payg_type",
+            "PAYG_Type"
+          ],
+          "latestTsKeyNames": [],
+          "getLatestValueWithTs": false
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 57,
+          "layoutY": 459
+        },
+        "type": "org.thingsboard.rule.engine.filter.TbJsSwitchNode",
+        "name": "PAYG Type",
+        "debugMode": true,
+        "configuration": {
+          "jsScript": "var returnType = \"\";\nif (metadata.hasOwnProperty('ss_payg_type')) returnType = metadata.ss_payg_type; else returnType = metadata.ss_PAYG_Type;\nreturn [returnType];"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 55,
+          "layoutY": 358
+        },
+        "type": "org.thingsboard.rule.engine.metadata.TbGetOriginatorFieldsNode",
+        "name": "Device Name",
+        "debugMode": true,
+        "configuration": {
+          "fieldsMapping": {
+            "name": "deviceName",
+            "type": "deviceType"
+          }
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 375,
+          "layoutY": 529
+        },
+        "type": "org.thingsboard.rule.engine.flow.TbRuleChainInputNode",
+        "name": "Angaza",
+        "debugMode": false,
+        "configuration": {
+          "ruleChainId": "411d1560-4286-11ee-9740-31a4f1fcfc8c"
+        },
+        "externalId": null
+      }
+    ],
+    "connections": [
+      {
+        "fromIndex": 1,
+        "toIndex": 3,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 2,
+        "toIndex": 0,
+        "type": "Solaris"
+      },
+      {
+        "fromIndex": 2,
+        "toIndex": 4,
+        "type": "Angaza"
+      },
+      {
+        "fromIndex": 3,
+        "toIndex": 2,
+        "type": "Success"
+      }
+    ],
+    "ruleChainConnections": null
+  }
+}

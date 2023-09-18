@@ -20,7 +20,7 @@
           "layoutY": 108
         },
         "type": "org.thingsboard.rule.engine.flow.TbRuleChainInputNode",
-        "name": "Data to PAYG Providers",
+        "name": "Interact with PAYG Software Providers",
         "debugMode": false,
         "configuration": {
           "ruleChainId": "d8ea2f50-ca3f-11ed-a290-33df78587eb5"
