@@ -8,7 +8,8 @@
     "firstRuleNodeId": null,
     "root": false,
     "debugMode": false,
-    "configuration": null
+    "configuration": null,
+    "externalId": null
   },
   "metadata": {
     "firstNodeIndex": 7,
@@ -16,15 +17,16 @@
       {
         "additionalInfo": {
           "description": "",
-          "layoutX": 1275,
-          "layoutY": 108
+          "layoutX": 1284,
+          "layoutY": 64
         },
         "type": "org.thingsboard.rule.engine.flow.TbRuleChainInputNode",
         "name": "Interact with PAYG Software Providers",
         "debugMode": false,
         "configuration": {
-          "ruleChainId": "d8ea2f50-ca3f-11ed-a290-33df78587eb5"
-        }
+          "ruleChainId": "a11c16b0-56c6-11ee-977a-790947a4b8ef"
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -37,7 +39,8 @@
         "debugMode": false,
         "configuration": {
           "jsScript": "msg = {\n    \"token\":metadata.created_token\n}\nreturn {msg: msg, metadata: metadata, msgType: msgType};"
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -51,7 +54,8 @@
         "configuration": {
           "serviceIdMetaDataAttribute": "serviceId",
           "requestIdMetaDataAttribute": "requestUUID"
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -64,21 +68,24 @@
         "debugMode": false,
         "configuration": {
           "timeoutInSeconds": 60
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
+          "description": null,
           "layoutX": 281,
           "layoutY": 302
         },
         "type": "org.thingsboard.rule.engine.filter.TbOriginatorTypeFilterNode",
         "name": "Is Entity Group",
-        "debugMode": false,
+        "debugMode": true,
         "configuration": {
           "originatorTypes": [
             "ENTITY_GROUP"
           ]
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -93,7 +100,8 @@
             "POST_ATTRIBUTES_REQUEST",
             "RPC_CALL_FROM_SERVER_TO_DEVICE"
           ]
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -106,7 +114,8 @@
         "configuration": {
           "entityGroupId": null,
           "entityGroupIsMessageOriginator": true
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -120,7 +129,8 @@
         "configuration": {
           "persistAlarmRulesState": false,
           "fetchAlarmRulesStateOnStart": false
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -141,7 +151,8 @@
           "removeCurrentRelations": false,
           "changeOriginatorToRelatedEntity": true,
           "entityCacheExpiration": 300
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -174,7 +185,8 @@
           "credentials": {
             "type": "anonymous"
           }
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -190,7 +202,8 @@
             "TITLE"
           ],
           "addToMetadata": false
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -206,7 +219,8 @@
             "TITLE"
           ],
           "addToMetadata": false
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -223,7 +237,8 @@
           ],
           "metadataNames": [],
           "checkAllKeys": true
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -236,7 +251,8 @@
         "debugMode": true,
         "configuration": {
           "jsScript": "//Snip out only advertisement telemetry data to prevent rogue gateway posts of all attributes and telemetry of any device\nmetadata.deviceName = msg.advt_adn;\nmetadata.deviceType = \"default\";\nvar result = {\n    advt_mac: msg.advt_tms.advt_mac,\n    advt_rv: msg.advt_tms.advt_rv,\n    advt_ft: msg.advt_tms.advt_ft,\n    advt_aid: msg.advt_tms.advt_aid,\n    advt_gts: msg.advt_tms.advt_gts,\n    advt_fv: msg.advt_tms.advt_fv,\n    advt_pu: msg.advt_tms.advt_pu,\n    advt_pst: msg.advt_tms.advt_pst, \n    advt_cr: msg.advt_tms.advt_cr, \n    loc_gmid: msg.advt_tms.advt_gmid, \n    loc_gid: msg.advt_tms.advt_gid, \n    loc_ln: msg.advt_tms.advt_ln, \n    loc_lt: msg.advt_tms.advt_lt, \n    loc_la: msg.advt_tms.advt_la, \n    loc_dss: msg.advt_tms.advt_dss,\n    advt_s1: msg.advt_tms.advt_s1\n}\nmsg = result;\nreturn {msg: msg, metadata: metadata, msgType: msgType};"
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -249,7 +265,8 @@
         "debugMode": false,
         "configuration": {
           "defaultTTL": 0
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -263,7 +280,8 @@
         "configuration": {
           "alarmType": "General Alarm",
           "alarmDetailsBuildJs": "var details = {};\nif (metadata.prevAlarmDetails) {\n    details = JSON.parse(metadata.prevAlarmDetails);\n}\nreturn details;"
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -273,23 +291,26 @@
         },
         "type": "org.thingsboard.rule.engine.telemetry.TbMsgTimeseriesNode",
         "name": "Save Timeseries",
-        "debugMode": false,
+        "debugMode": true,
         "configuration": {
           "defaultTTL": 0
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
+          "description": null,
           "layoutX": 1003,
           "layoutY": 108
         },
         "type": "org.thingsboard.rule.engine.telemetry.TbMsgAttributesNode",
         "name": "Save Attributes",
-        "debugMode": false,
+        "debugMode": true,
         "configuration": {
           "scope": "CLIENT_SCOPE",
           "notifyDevice": "false"
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -299,10 +320,11 @@
         },
         "type": "org.thingsboard.rule.engine.filter.TbMsgTypeSwitchNode",
         "name": "Message Type Switch",
-        "debugMode": false,
+        "debugMode": true,
         "configuration": {
           "version": 0
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -314,7 +336,8 @@
         "debugMode": false,
         "configuration": {
           "jsScript": "return '\\nIncoming message:\\n' + JSON.stringify(msg) + '\\nIncoming metadata:\\n' + JSON.stringify(metadata);"
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -327,7 +350,8 @@
         "debugMode": false,
         "configuration": {
           "jsScript": "return 'Incoming message:\\n' + JSON.stringify(msg) + '\\nIncoming metadata:\\n' + JSON.stringify(metadata);"
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -348,7 +372,8 @@
           ],
           "latestTsKeyNames": [],
           "getLatestValueWithTs": false
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -361,7 +386,8 @@
         "debugMode": false,
         "configuration": {
           "jsScript": "if (msg.method === \"Set Credit\" || msg.method === \"Add Credit\" || msg.method === \"Unlock PAYG\") return ['Generate Token']; \nelse return ['Failure'];\n"
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -374,7 +400,8 @@
         "debugMode": false,
         "configuration": {
           "jsScript": "return[msg.method];"
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -388,7 +415,8 @@
         "configuration": {
           "inputKey": "credit",
           "outputKey": "created_token"
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -402,7 +430,8 @@
         "configuration": {
           "inputKey": "credit",
           "outputKey": "created_token"
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -415,7 +444,8 @@
         "debugMode": false,
         "configuration": {
           "jsScript": "\nreturn {msg: msg, metadata: metadata, msgType: msgType};"
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -429,7 +459,8 @@
         "configuration": {
           "inputKey": "credit",
           "outputKey": "created_token"
-        }
+        },
+        "externalId": null
       },
       {
         "additionalInfo": {
@@ -441,7 +472,8 @@
         "debugMode": false,
         "configuration": {
           "jsScript": "return '\\nIncoming message:\\n' + JSON.stringify(msg) + '\\nIncoming metadata:\\n' + JSON.stringify(metadata);"
-        }
+        },
+        "externalId": null
       }
     ],
     "connections": [
@@ -452,16 +484,11 @@
       },
       {
         "fromIndex": 4,
-        "toIndex": 18,
-        "type": "False"
-      },
-      {
-        "fromIndex": 4,
         "toIndex": 5,
         "type": "True"
       },
       {
-        "fromIndex": 5,
+        "fromIndex": 4,
         "toIndex": 18,
         "type": "False"
       },
@@ -471,8 +498,18 @@
         "type": "True"
       },
       {
+        "fromIndex": 5,
+        "toIndex": 18,
+        "type": "False"
+      },
+      {
         "fromIndex": 6,
         "toIndex": 18,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 7,
+        "toIndex": 4,
         "type": "Success"
       },
       {
@@ -481,13 +518,13 @@
         "type": "Alarm Created"
       },
       {
-        "fromIndex": 7,
-        "toIndex": 4,
+        "fromIndex": 8,
+        "toIndex": 14,
         "type": "Success"
       },
       {
-        "fromIndex": 8,
-        "toIndex": 14,
+        "fromIndex": 10,
+        "toIndex": 8,
         "type": "Success"
       },
       {
@@ -496,7 +533,7 @@
         "type": "Failure"
       },
       {
-        "fromIndex": 10,
+        "fromIndex": 11,
         "toIndex": 8,
         "type": "Success"
       },
@@ -504,11 +541,6 @@
         "fromIndex": 11,
         "toIndex": 10,
         "type": "Failure"
-      },
-      {
-        "fromIndex": 11,
-        "toIndex": 8,
-        "type": "Success"
       },
       {
         "fromIndex": 12,
@@ -537,13 +569,13 @@
       },
       {
         "fromIndex": 18,
-        "toIndex": 28,
-        "type": "Other"
+        "toIndex": 0,
+        "type": "Attributes Updated"
       },
       {
         "fromIndex": 18,
-        "toIndex": 17,
-        "type": "Post attributes"
+        "toIndex": 3,
+        "type": "RPC Request to Device"
       },
       {
         "fromIndex": 18,
@@ -552,8 +584,8 @@
       },
       {
         "fromIndex": 18,
-        "toIndex": 22,
-        "type": "REST API request"
+        "toIndex": 17,
+        "type": "Post attributes"
       },
       {
         "fromIndex": 18,
@@ -562,8 +594,13 @@
       },
       {
         "fromIndex": 18,
-        "toIndex": 3,
-        "type": "RPC Request to Device"
+        "toIndex": 22,
+        "type": "REST API request"
+      },
+      {
+        "fromIndex": 18,
+        "toIndex": 28,
+        "type": "Other"
       },
       {
         "fromIndex": 20,
@@ -587,13 +624,13 @@
       },
       {
         "fromIndex": 23,
-        "toIndex": 27,
-        "type": "Set Credit"
+        "toIndex": 25,
+        "type": "Unlock PAYG"
       },
       {
         "fromIndex": 23,
-        "toIndex": 25,
-        "type": "Unlock PAYG"
+        "toIndex": 27,
+        "type": "Set Credit"
       },
       {
         "fromIndex": 24,
