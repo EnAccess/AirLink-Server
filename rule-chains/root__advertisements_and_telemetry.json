@@ -474,6 +474,38 @@
           "jsScript": "return '\\nIncoming message:\\n' + JSON.stringify(msg) + '\\nIncoming metadata:\\n' + JSON.stringify(metadata);"
         },
         "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 2218,
+          "layoutY": 716
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Condition token",
+        "debugMode": true,
+        "configuration": {
+          "scriptLang": "JS",
+          "jsScript": "msg = {\n    \"pc_tkn\":metadata.created_token,\n    \"pc_tkn_credit\": msg.credit,\n    \"pc_tkn_ts\":new Date(Date())\n};\nmsgType=\"POST_ATTRIBUTES_REQUEST\";\nmetadata.deviceName = metadata.name;\nreturn {msg: msg, metadata: metadata, msgType: msgType};",
+          "tbelScript": "return {msg: msg, metadata: metadata, msgType: msgType};"
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 2218,
+          "layoutY": 814
+        },
+        "type": "org.thingsboard.rule.engine.telemetry.TbMsgAttributesNode",
+        "name": "Save token",
+        "debugMode": false,
+        "configuration": {
+          "scope": "SHARED_SCOPE",
+          "notifyDevice": false,
+          "sendAttributesUpdatedNotification": false
+        },
+        "externalId": null
       }
     ],
     "connections": [
@@ -608,6 +640,11 @@
         "type": "Success"
       },
       {
+        "fromIndex": 20,
+        "toIndex": 29,
+        "type": "Success"
+      },
+      {
         "fromIndex": 21,
         "toIndex": 26,
         "type": "Success"
@@ -665,6 +702,11 @@
       {
         "fromIndex": 27,
         "toIndex": 20,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 29,
+        "toIndex": 30,
         "type": "Success"
       }
     ],
