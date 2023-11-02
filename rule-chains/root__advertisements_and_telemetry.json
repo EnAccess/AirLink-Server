@@ -12,7 +12,7 @@
     "externalId": null
   },
   "metadata": {
-    "firstNodeIndex": 7,
+    "firstNodeIndex": null,
     "nodes": [
       {
         "additionalInfo": {
@@ -135,30 +135,8 @@
       {
         "additionalInfo": {
           "description": "",
-          "layoutX": 1928,
-          "layoutY": 383
-        },
-        "type": "org.thingsboard.rule.engine.action.TbCreateRelationNode",
-        "name": "Relate Gateway-Device",
-        "debugMode": false,
-        "configuration": {
-          "direction": "FROM",
-          "entityType": "DEVICE",
-          "entityNamePattern": "${deviceName}",
-          "entityTypePattern": "${deviceType}",
-          "relationType": "Contains",
-          "createEntityIfNotExists": false,
-          "removeCurrentRelations": false,
-          "changeOriginatorToRelatedEntity": true,
-          "entityCacheExpiration": 300
-        },
-        "externalId": null
-      },
-      {
-        "additionalInfo": {
-          "description": "",
-          "layoutX": 1929,
-          "layoutY": 490
+          "layoutX": 1564,
+          "layoutY": 386
         },
         "type": "org.thingsboard.rule.engine.rest.TbRestApiCallNode",
         "name": "Neighborhood Watch",
@@ -190,43 +168,9 @@
       },
       {
         "additionalInfo": {
-          "description": "",
-          "layoutX": 1603,
-          "layoutY": 490
-        },
-        "type": "org.thingsboard.rule.engine.metadata.TbGetCustomerDetailsNode",
-        "name": "Customer Owned?",
-        "debugMode": false,
-        "configuration": {
-          "detailsList": [
-            "TITLE"
-          ],
-          "addToMetadata": false
-        },
-        "externalId": null
-      },
-      {
-        "additionalInfo": {
-          "description": "",
-          "layoutX": 1605,
-          "layoutY": 383
-        },
-        "type": "org.thingsboard.rule.engine.metadata.TbGetTenantDetailsNode",
-        "name": "Tenant Owned?",
-        "debugMode": false,
-        "configuration": {
-          "detailsList": [
-            "TITLE"
-          ],
-          "addToMetadata": false
-        },
-        "externalId": null
-      },
-      {
-        "additionalInfo": {
           "description": "If Gateway Reports Device, post that data!",
-          "layoutX": 1602,
-          "layoutY": 198
+          "layoutX": 1286,
+          "layoutY": 196
         },
         "type": "org.thingsboard.rule.engine.filter.TbCheckMessageNode",
         "name": "Device PiggyBack?",
@@ -243,8 +187,8 @@
       {
         "additionalInfo": {
           "description": "",
-          "layoutX": 1603,
-          "layoutY": 288
+          "layoutX": 1287,
+          "layoutY": 286
         },
         "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
         "name": "Snip Out Device",
@@ -257,8 +201,8 @@
       {
         "additionalInfo": {
           "description": "",
-          "layoutX": 1928,
-          "layoutY": 286
+          "layoutX": 1292,
+          "layoutY": 386
         },
         "type": "org.thingsboard.rule.engine.telemetry.TbMsgTimeseriesNode",
         "name": "Save Snipped Device",
@@ -506,6 +450,40 @@
           "sendAttributesUpdatedNotification": false
         },
         "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "",
+          "layoutX": 1563,
+          "layoutY": 287
+        },
+        "type": "org.thingsboard.rule.engine.transform.TbTransformMsgNode",
+        "name": "Snip Out Device",
+        "debugMode": true,
+        "configuration": {
+          "scriptLang": "JS",
+          "jsScript": "//Snip out only advertisement telemetry data to prevent rogue gateway posts of all attributes and telemetry of any device\nmetadata.deviceName = msg.advt_mac;\nmetadata.deviceType = \"default\";\nvar result = {\n    advt_mac: msg.advt_tms.advt_mac,\n    advt_rv: msg.advt_tms.advt_rv,\n    advt_ft: msg.advt_tms.advt_ft,\n    advt_aid: msg.advt_tms.advt_aid,\n    advt_gts: msg.advt_tms.advt_gts,\n    advt_fv: msg.advt_tms.advt_fv,\n    advt_pu: msg.advt_tms.advt_pu,\n    advt_pst: msg.advt_tms.advt_pst,\n    advt_cr: msg.advt_tms.advt_cr,\n    loc_gmid: msg.advt_tms.advt_gmid,\n    loc_gid: msg.advt_tms.advt_gid,\n    loc_ln: msg.advt_tms.advt_ln,\n    loc_lt: msg.advt_tms.advt_lt,\n    loc_la: msg.advt_tms.advt_la,\n    loc_dss: msg.advt_tms.advt_dss,\n    advt_s1: msg.advt_tms.advt_s1\n}\nmsg = result;\nreturn {\n    msg: msg,\n    metadata: metadata,\n    msgType: msgType\n};",
+          "tbelScript": null
+        },
+        "externalId": null
+      },
+      {
+        "additionalInfo": {
+          "description": "If Gateway Reports Device, post that data!",
+          "layoutX": 1561,
+          "layoutY": 195
+        },
+        "type": "org.thingsboard.rule.engine.filter.TbCheckMessageNode",
+        "name": "Device PiggyBack?",
+        "debugMode": false,
+        "configuration": {
+          "messageNames": [
+            "advt_mac"
+          ],
+          "metadataNames": [],
+          "checkAllKeys": true
+        },
+        "externalId": null
       }
     ],
     "connections": [
@@ -521,7 +499,7 @@
       },
       {
         "fromIndex": 4,
-        "toIndex": 18,
+        "toIndex": 15,
         "type": "False"
       },
       {
@@ -531,12 +509,12 @@
       },
       {
         "fromIndex": 5,
-        "toIndex": 18,
+        "toIndex": 15,
         "type": "False"
       },
       {
         "fromIndex": 6,
-        "toIndex": 18,
+        "toIndex": 15,
         "type": "Success"
       },
       {
@@ -546,168 +524,158 @@
       },
       {
         "fromIndex": 7,
-        "toIndex": 15,
+        "toIndex": 12,
         "type": "Alarm Created"
       },
       {
-        "fromIndex": 8,
-        "toIndex": 14,
-        "type": "Success"
-      },
-      {
-        "fromIndex": 10,
-        "toIndex": 8,
-        "type": "Success"
-      },
-      {
-        "fromIndex": 10,
-        "toIndex": 9,
-        "type": "Failure"
-      },
-      {
-        "fromIndex": 11,
-        "toIndex": 8,
-        "type": "Success"
-      },
-      {
-        "fromIndex": 11,
+        "fromIndex": 9,
         "toIndex": 10,
-        "type": "Failure"
-      },
-      {
-        "fromIndex": 12,
-        "toIndex": 13,
         "type": "True"
       },
       {
-        "fromIndex": 13,
+        "fromIndex": 9,
+        "toIndex": 29,
+        "type": "False"
+      },
+      {
+        "fromIndex": 10,
         "toIndex": 11,
         "type": "Success"
       },
       {
-        "fromIndex": 16,
+        "fromIndex": 13,
         "toIndex": 0,
         "type": "Success"
       },
       {
-        "fromIndex": 16,
-        "toIndex": 12,
+        "fromIndex": 13,
+        "toIndex": 9,
         "type": "Success"
       },
       {
-        "fromIndex": 17,
+        "fromIndex": 14,
         "toIndex": 0,
         "type": "Success"
       },
       {
-        "fromIndex": 18,
+        "fromIndex": 15,
         "toIndex": 0,
         "type": "Attributes Updated"
       },
       {
-        "fromIndex": 18,
+        "fromIndex": 15,
         "toIndex": 3,
         "type": "RPC Request to Device"
       },
       {
-        "fromIndex": 18,
-        "toIndex": 16,
+        "fromIndex": 15,
+        "toIndex": 13,
         "type": "Post telemetry"
       },
       {
-        "fromIndex": 18,
-        "toIndex": 17,
+        "fromIndex": 15,
+        "toIndex": 14,
         "type": "Post attributes"
       },
       {
-        "fromIndex": 18,
-        "toIndex": 19,
+        "fromIndex": 15,
+        "toIndex": 16,
         "type": "RPC Request from Device"
       },
       {
-        "fromIndex": 18,
-        "toIndex": 22,
+        "fromIndex": 15,
+        "toIndex": 19,
         "type": "REST API request"
       },
       {
-        "fromIndex": 18,
-        "toIndex": 28,
+        "fromIndex": 15,
+        "toIndex": 25,
         "type": "Other"
       },
       {
-        "fromIndex": 20,
+        "fromIndex": 17,
         "toIndex": 1,
         "type": "Success"
       },
       {
-        "fromIndex": 20,
-        "toIndex": 29,
-        "type": "Success"
-      },
-      {
-        "fromIndex": 21,
+        "fromIndex": 17,
         "toIndex": 26,
         "type": "Success"
       },
       {
-        "fromIndex": 22,
-        "toIndex": 21,
-        "type": "Generate Token"
-      },
-      {
-        "fromIndex": 23,
-        "toIndex": 24,
-        "type": "Add Credit"
-      },
-      {
-        "fromIndex": 23,
-        "toIndex": 25,
-        "type": "Unlock PAYG"
-      },
-      {
-        "fromIndex": 23,
-        "toIndex": 27,
-        "type": "Set Credit"
-      },
-      {
-        "fromIndex": 24,
-        "toIndex": 20,
-        "type": "Failure"
-      },
-      {
-        "fromIndex": 24,
-        "toIndex": 20,
-        "type": "Success"
-      },
-      {
-        "fromIndex": 25,
-        "toIndex": 20,
-        "type": "Failure"
-      },
-      {
-        "fromIndex": 25,
-        "toIndex": 20,
-        "type": "Success"
-      },
-      {
-        "fromIndex": 26,
+        "fromIndex": 18,
         "toIndex": 23,
         "type": "Success"
       },
       {
-        "fromIndex": 27,
-        "toIndex": 20,
+        "fromIndex": 19,
+        "toIndex": 18,
+        "type": "Generate Token"
+      },
+      {
+        "fromIndex": 20,
+        "toIndex": 21,
+        "type": "Add Credit"
+      },
+      {
+        "fromIndex": 20,
+        "toIndex": 22,
+        "type": "Unlock PAYG"
+      },
+      {
+        "fromIndex": 20,
+        "toIndex": 24,
+        "type": "Set Credit"
+      },
+      {
+        "fromIndex": 21,
+        "toIndex": 17,
         "type": "Failure"
       },
       {
-        "fromIndex": 27,
+        "fromIndex": 21,
+        "toIndex": 17,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 22,
+        "toIndex": 17,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 22,
+        "toIndex": 17,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 23,
         "toIndex": 20,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 24,
+        "toIndex": 17,
+        "type": "Failure"
+      },
+      {
+        "fromIndex": 24,
+        "toIndex": 17,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 26,
+        "toIndex": 27,
+        "type": "Success"
+      },
+      {
+        "fromIndex": 28,
+        "toIndex": 8,
         "type": "Success"
       },
       {
         "fromIndex": 29,
-        "toIndex": 30,
-        "type": "Success"
+        "toIndex": 28,
+        "type": "True"
       }
     ],
     "ruleChainConnections": null
